@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration; use Illuminate\Database\Schema\Blueprint; use Illuminate\Support\Facades\Schema;
+return new class extends Migration { public function up(): void { Schema::table('orders', function(Blueprint $t): void { $t->index(['user_id','created_at']); $t->index(['status','created_at']); }); } public function down(): void { Schema::table('orders', function(Blueprint $t): void { $t->dropIndex(['user_id','created_at']); $t->dropIndex(['status','created_at']); }); } };

@@ -1,0 +1,70 @@
+services:
+  nginx:
+    image: nginx:1.29-alpine
+    ports: ["8080:80"]
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./backend/storage/app/public:/var/www/backend/storage/app/public:ro
+    depends_on: [backend, frontend]
+    networks: [toko-buku]
+  backend:
+    build: { context: ./backend, dockerfile: ../docker/backend/Dockerfile }
+    working_dir: /var/www/backend
+    volumes: ["./backend:/var/www/backend", "backend_vendor:/var/www/backend/vendor"]
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_KEY: ${APP_KEY:?Set APP_KEY in the root .env file}
+      APP_URL: http://localhost:8080
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: toko_buku
+      DB_USERNAME: toko_buku
+      DB_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in the root .env file}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_CLIENT: predis
+      CACHE_STORE: redis
+      QUEUE_CONNECTION: redis
+      SESSION_DRIVER: redis
+      MAIL_MAILER: smtp
+      MAIL_HOST: mailpit
+      MAIL_PORT: 1025
+      FRONTEND_URL: http://localhost:8080,http://localhost:3000
+    depends_on:
+      mysql: { condition: service_healthy }
+      redis: { condition: service_started }
+    networks: [toko-buku]
+  frontend:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    volumes: ["./frontend:/app", "frontend_node_modules:/app/node_modules"]
+    environment: { NEXT_PUBLIC_API_URL: http://localhost:8080/api, WATCHPACK_POLLING: "true" }
+    networks: [toko-buku]
+  mysql:
+    image: mysql:8.4
+    ports: ["${MYSQL_PORT:-3307}:3306"]
+    environment:
+      MYSQL_DATABASE: toko_buku
+      MYSQL_USER: toko_buku
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in the root .env file}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in the root .env file}
+    volumes: ["mysql_data:/var/lib/mysql"]
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks: [toko-buku]
+  redis:
+    image: redis:7-alpine
+    volumes: ["redis_data:/data"]
+    networks: [toko-buku]
+  mailpit:
+    image: axllent/mailpit:v1.27
+    ports: ["8025:8025"]
+    networks: [toko-buku]
+volumes: { backend_vendor: {}, frontend_node_modules: {}, mysql_data: {}, redis_data: {} }
+networks: { toko-buku: { driver: bridge } }

@@ -1,0 +1,4 @@
+<?php
+namespace App\Notifications;
+use App\Models\Order; use Illuminate\Bus\Queueable; use Illuminate\Contracts\Queue\ShouldQueue; use Illuminate\Notifications\Messages\MailMessage; use Illuminate\Notifications\Notification;
+class OrderStatusNotification extends Notification implements ShouldQueue { use Queueable; public function __construct(private readonly Order $order) {} public function via(object $notifiable): array { return ['database','mail']; } public function toArray(object $notifiable): array { return ['order_number'=>$this->order->number,'status'=>$this->order->status,'message'=>'Status order '.$this->order->number.' berubah menjadi '.$this->order->status.'.']; } public function toMail(object $notifiable): MailMessage { return (new MailMessage)->subject('Update order '.$this->order->number)->line('Status order Anda: '.$this->order->status)->action('Lihat order', config('app.url')); } }

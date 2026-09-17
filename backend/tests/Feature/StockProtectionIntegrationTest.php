@@ -1,0 +1,4 @@
+<?php
+namespace Tests\Feature;
+use App\Models\Book; use App\Models\Cart; use Illuminate\Foundation\Testing\RefreshDatabase; use Tests\TestCase;
+class StockProtectionIntegrationTest extends TestCase { use RefreshDatabase; public function test_checkout_rejects_quantity_above_available_stock(): void { $book=Book::factory()->create(['stock'=>1]); $token='33333333-3333-4333-8333-333333333333'; $cart=Cart::create(['guest_token'=>$token]); $cart->items()->create(['book_id'=>$book->id,'quantity'=>2]); $this->postJson('/api/checkout',['address'=>['recipient_name'=>'Tamu','phone'=>'08123456789','address_line_1'=>'Jl. Buku','city'=>'Jakarta','province'=>'DKI Jakarta','postal_code'=>'10110']],['X-Cart-Token'=>$token])->assertUnprocessable(); $this->assertDatabaseCount('orders',0); $this->assertDatabaseHas('books',['id'=>$book->id,'stock'=>1]); } }

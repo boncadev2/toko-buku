@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fffdf8;
+  --foreground: #1c1917;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-mono: "Courier New", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+/* Blue storefront identity: these tokens intentionally override Tailwind's
+   utility colors while preserving the existing component structure. */
+.bg-orange-700 { background-color: #1d4ed8; }
+.bg-orange-100 { background-color: #dbeafe; }
+.bg-orange-200 { background-color: #bfdbfe; }
+.bg-orange-300 { background-color: #93c5fd; }
+.text-orange-700 { color: #1d4ed8; }
+.text-orange-800 { color: #1e40af; }
+.text-orange-300 { color: #93c5fd; }
+.text-orange-200 { color: #bfdbfe; }
+.border-orange-200 { border-color: #bfdbfe; }
+.border-orange-400\/50 { border-color: rgb(96 165 250 / 0.5); }
+.shadow-orange-950\/5 { --tw-shadow-color: rgb(30 58 138 / 0.05); }
+.bg-stone-950 { background-color: #0f172a; }
+
+#beranda {
+  background-image: radial-gradient(circle at 80% 10%, #bfdbfe, transparent 32%),
+    radial-gradient(circle at 5% 90%, #dbeafe, transparent 28%);
+}
+
+#promo {
+  background-color: #0f172a;
+}
+
+/* Search catalogue: a restrained professional blue surface, while keeping the
+   storefront cards legible. The selector is scoped to the catalogue header. */
+main:has(input[placeholder="Cari judul atau penulis"]) {
+  background:
+    radial-gradient(circle at 10% 0%, rgb(191 219 254 / 0.8), transparent 30%),
+    linear-gradient(180deg, #eef6ff 0%, #f7fbff 55%, #eef5ff 100%);
+}
+
+main:has(input[placeholder="Cari judul atau penulis"]) > header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: rgb(255 253 248 / 0.95);
+  border-color: rgb(231 229 228 / 0.8);
+  backdrop-filter: blur(12px);
+}
+
+main:has(input[placeholder="Cari judul atau penulis"]) > footer {
+  margin-top: 2rem;
+  background: #fff;
+  color: #57534e;
+  border-color: #e7e5e4;
+  min-height: 0;
+  padding: 0;
+  font-size: inherit;
+  background-image: none;
+}
+
+/* Simple product-specification layout: two quiet columns, without card chrome. */
+dl.divide-y {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 4rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+}
+
+dl.divide-y > div {
+  display: block;
+  border: 0 !important;
+  padding: 1rem 0;
+}
+
+dl.divide-y dt {
+  margin-bottom: 0.35rem;
+}
+
+dl.divide-y dd {
+  font-size: 1.125rem;
+}
+
+@media (max-width: 640px) {
+  dl.divide-y {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+}
+
+/* Recommendation shelf: compact book-cover cards in two columns. */
+aside.bg-slate-950 .space-y-3 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+aside.bg-slate-950 .space-y-3 > a {
+  position: relative;
+  display: flex;
+  min-height: 10rem;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  background: linear-gradient(145deg, #2563eb, #172554 70%);
+  padding: 0.85rem;
+  line-height: 1.25;
+}
+
+aside.bg-slate-950 .space-y-3 > a::before {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent, rgb(15 23 42 / 0.7));
+  content: "";
+}
+
+aside.bg-slate-950 .space-y-3 > a > * {
+  position: relative;
+}
+
+aside.bg-slate-950 .space-y-3 > a span:last-child {
+  margin: 0.45rem 0 0;
+}

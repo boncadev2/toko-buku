@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration; use Illuminate\Database\Schema\Blueprint; use Illuminate\Support\Facades\Schema;
+return new class extends Migration { public function up(): void { Schema::create('financial_transactions', function(Blueprint $t): void { $t->id(); $t->foreignId('order_id')->nullable()->constrained()->nullOnDelete(); $t->enum('type',['income','expense','refund']); $t->string('category')->index(); $t->decimal('amount',15,2); $t->string('reference')->nullable()->unique(); $t->text('description')->nullable(); $t->timestamp('occurred_at')->index(); $t->timestamps(); }); } public function down(): void { Schema::dropIfExists('financial_transactions'); } };

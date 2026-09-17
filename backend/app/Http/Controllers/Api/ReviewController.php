@@ -1,0 +1,4 @@
+<?php
+namespace App\Http\Controllers\Api;
+use App\Http\Controllers\Controller; use App\Models\Order; use App\Models\Review; use Illuminate\Http\Request; use Illuminate\Validation\Rule;
+class ReviewController extends Controller { public function store(Request $r) { $d=$r->validate(['book_id'=>['required','integer','exists:books,id'],'rating'=>['required','integer','between:1,5'],'review'=>['nullable','string','max:2000']]); $ok=Order::where('user_id',$r->user()->id)->where('status','completed')->whereHas('items',fn($q)=>$q->where('book_id',$d['book_id']))->exists(); abort_unless($ok,403,'Review hanya untuk pembelian selesai.'); return response()->json(['data'=>$r->user()->reviews()->updateOrCreate(['book_id'=>$d['book_id']],$d+['status'=>'pending'])],201); } public function moderate(Request $r,Review $review) { $d=$r->validate(['status'=>['required',Rule::in(['approved','rejected'])]]); $review->update($d); return response()->json(['data'=>$review]); } }

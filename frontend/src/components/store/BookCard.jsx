@@ -1,0 +1,2 @@
+import BookCover from "./BookCover";
+export default function BookCard({ book }) { return <a href={`/buku/${book.slug}`} className="rounded-2xl border border-stone-200 bg-white p-3 shadow-sm"><BookCover title={book.title} /><h2 className="mt-3 truncate text-sm font-bold">{book.title}</h2><p className="mt-1 truncate text-xs text-stone-500">{book.author}</p><p className="mt-2 font-black text-blue-700">Rp{Number(book.price).toLocaleString("id-ID")}</p></a>; }

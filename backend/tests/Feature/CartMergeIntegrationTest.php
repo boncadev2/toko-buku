@@ -1,0 +1,4 @@
+<?php
+namespace Tests\Feature;
+use App\Models\Book; use App\Models\Cart; use App\Models\User; use Illuminate\Foundation\Testing\RefreshDatabase; use Tests\TestCase;
+class CartMergeIntegrationTest extends TestCase { use RefreshDatabase; public function test_guest_cart_merges_when_customer_logs_in(): void { $book=Book::factory()->create(['stock'=>10]); $user=User::factory()->create(['phone'=>'08123456789','status'=>'active','password'=>'password']); $token='22222222-2222-4222-8222-222222222222'; $cart=Cart::create(['guest_token'=>$token]); $cart->items()->create(['book_id'=>$book->id,'quantity'=>2]); $this->postJson('/api/auth/login',['login'=>$user->email,'password'=>'password'],['X-Cart-Token'=>$token])->assertOk(); $this->assertDatabaseHas('carts',['user_id'=>$user->id]); $this->assertDatabaseHas('cart_items',['book_id'=>$book->id,'quantity'=>2]); $this->assertDatabaseMissing('carts',['guest_token'=>$token]); } }
