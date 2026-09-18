@@ -1,4 +1,6 @@
-"use client";
+const fs = require('fs');
+
+const content = `"use client";
 
 /* eslint-disable @next/next/no-html-link-for-pages */
 /* eslint-disable @next/next/no-img-element */
@@ -14,7 +16,7 @@ function DynamicBookCard({ book }) {
   if (book.discount_type === 'percentage') label = "-" + parseInt(book.discount_value) + "%";
   else if (book.discount_type === 'fixed') label = "Promo";
 
-  return <a href={`/buku/${book.slug}`} className="group rounded-2xl bg-white p-4 shadow-sm border border-stone-100 transition hover:-translate-y-1 hover:shadow-md">
+  return <a href={\`/buku/\${book.slug}\`} className="group rounded-2xl bg-white p-4 shadow-sm border border-stone-100 transition hover:-translate-y-1 hover:shadow-md">
     <div className="relative aspect-[3/4] rounded-xl bg-slate-100 p-0 overflow-hidden text-white">
       {book.cover_image_url ? <img src={book.cover_image_url} alt={book.title} className="w-full h-full object-cover" /> : <div className="p-3 w-full h-full bg-gradient-to-br from-blue-700 to-cyan-500 flex items-end"><b className="leading-tight">{book.title}</b></div>}
       {label && <span className="absolute right-2 top-2 rounded-full bg-white/95 px-2 py-1 text-[10px] font-bold text-stone-900 shadow-sm">{label}</span>}
@@ -49,15 +51,15 @@ function SearchContent() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const cartToken = localStorage.getItem("cart_token");
-    const headers = { Accept: "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(cartToken ? { "X-Cart-Token": cartToken } : {}) };
+    const headers = { Accept: "application/json", ...(token ? { Authorization: \`Bearer \${token}\` } : {}), ...(cartToken ? { "X-Cart-Token": cartToken } : {}) };
     
-    if (token) fetch(`${apiUrl}/auth/me`, { headers }).then((r) => r.ok ? r.json() : null).then((p) => setUser(p?.data || null));
-    fetch(`${apiUrl}/cart`, { headers }).then((r) => r.ok ? r.json() : null).then((p) => {
+    if (token) fetch(\`\${apiUrl}/auth/me\`, { headers }).then((r) => r.ok ? r.json() : null).then((p) => setUser(p?.data || null));
+    fetch(\`\${apiUrl}/cart\`, { headers }).then((r) => r.ok ? r.json() : null).then((p) => {
       if (p?.meta?.cart_token) localStorage.setItem("cart_token", p.meta.cart_token);
       setCartCount((p?.data?.items || []).reduce((sum, item) => sum + Number(item.quantity || 0), 0));
     }).catch(() => null);
 
-    fetch(`${apiUrl}/categories`).then(r => r.ok ? r.json() : null).then(p => {
+    fetch(\`\${apiUrl}/categories\`).then(r => r.ok ? r.json() : null).then(p => {
       setCategories(p?.data || []);
     });
   }, []);
@@ -65,18 +67,18 @@ function SearchContent() {
   // Fetch Books
   useEffect(() => {
     setLoading(true);
-    let url = `${apiUrl}/books?per_page=20`;
-    if (query) url += `&search=${encodeURIComponent(query)}`;
+    let url = \`\${apiUrl}/books?per_page=20\`;
+    if (query) url += \`&search=\${encodeURIComponent(query)}\`;
     if (category !== "Semua") {
       const catObj = categories.find(c => c.name === category || c.slug === category);
-      if (catObj) url += `&category=${catObj.slug}`;
-      else if (category.match(/^[a-z0-9-]+$/)) url += `&category=${category}`; // fallback if it's already a slug
+      if (catObj) url += \`&category=\${catObj.slug}\`;
+      else if (category.match(/^[a-z0-9-]+$/)) url += \`&category=\${category}\`; // fallback if it's already a slug
     }
     
     let apiSort = "newest";
     if (sort === "low") apiSort = "price_asc";
     if (sort === "high") apiSort = "price_desc";
-    url += `&sort=${apiSort}`;
+    url += \`&sort=\${apiSort}\`;
 
     fetch(url).then(r => r.ok ? r.json() : null).then(p => {
       setResults(p?.data || []);
@@ -99,7 +101,7 @@ function SearchContent() {
       </aside>
       <section>
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <b className="text-slate-700">{loading ? "Mencari..." : `${results.length} buku ditemukan`}</b>
+          <b className="text-slate-700">{loading ? "Mencari..." : \`\${results.length} buku ditemukan\`}</b>
           <select className="rounded-lg border bg-white px-3 py-1.5 text-sm outline-none" value={sort} onChange={(e) => setSort(e.target.value)}>
             <option value="relevant">Paling relevan (Terbaru)</option>
             <option value="low">Harga terendah</option>
@@ -123,3 +125,6 @@ export default function Search() {
     <StoreFooter/>
   </main>;
 }
+`;
+
+fs.writeFileSync('src/app/cari/page.jsx', content);

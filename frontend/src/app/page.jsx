@@ -3,6 +3,8 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import LogoutConfirmModal from "../components/LogoutConfirmModal";
 import MarketplaceFloatingButtons from "../components/MarketplaceFloatingButtons";
 
@@ -38,8 +40,38 @@ function BookCard({ book }) {
   </article>;
 }
 
-function Shelf({ shelf }) {
-  return <section id={shelf.id} className="scroll-mt-24 py-10 sm:py-14"><div className="mb-7 flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-orange-700">{shelf.eyebrow}</p><h2 className="mt-2 text-2xl font-black tracking-tight text-stone-950 sm:text-3xl">{shelf.title}</h2><p className="mt-2 text-sm text-stone-600">{shelf.description}</p></div><a href="#" className="text-sm font-bold text-orange-700">Lihat semua →</a></div><div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-5">{shelf.books.map((book) => <BookCard book={book} key={book[0]} />)}</div></section>;
+
+function DynamicBookCard({ book, label, coverClass }) {
+  const title = book.title;
+  const author = book.author || "Tanpa Penulis";
+  
+  const formatter = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 });
+  const price = formatter.format(book.price);
+  const originalPrice = book.original_price ? formatter.format(book.original_price) : null;
+  
+  const slug = book.slug;
+  const coverUrl = book.cover_image_url;
+  
+  // Calculate discount label if not provided
+  if (!label && book.discount_type === 'percentage') {
+    label = "-" + parseInt(book.discount_value) + "%";
+  } else if (!label && book.discount_type === 'fixed') {
+    label = "Promo";
+  }
+
+  return <article className="group min-w-0 rounded-2xl border border-stone-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+    <div className={`relative flex aspect-[3/4] items-end overflow-hidden rounded-xl ${!coverUrl ? 'bg-gradient-to-br ' + (coverClass || 'from-rose-500 to-orange-300') : 'bg-slate-100'} p-0 text-white shadow-inner`}>
+      {coverUrl ? <img src={coverUrl} alt={title} className="w-full h-full object-cover" /> : <div className="p-4 w-full h-full flex flex-col justify-end"><div className="w-full border-l border-white/50 pl-3"><p className="text-[10px] font-medium uppercase tracking-[.18em] text-white/70">Koleksi bukupagi</p><h3 className="mt-2 text-lg font-black leading-tight">{title}</h3></div></div>}
+      {label && <span className="absolute right-2 top-2 rounded-full bg-white/95 px-2 py-1 text-[10px] font-bold text-stone-900 shadow-sm">{label}</span>}
+    </div>
+    <div className="px-1 pb-1 pt-4"><h3 className="truncate font-bold" title={title}>{title}</h3><p className="mt-1 truncate text-sm text-stone-500">{author}</p><div className="mt-3 flex flex-wrap items-baseline gap-x-2"><span className="font-bold text-orange-700">{price}</span>{originalPrice && <span className="text-xs text-stone-400 line-through">{originalPrice}</span>}</div><Link href={`/buku/${slug}`} className="mt-3 inline-flex text-xs font-bold text-blue-700 hover:text-blue-900">Lihat detail →</Link></div>
+  </article>;
+}
+
+function Shelf({ shelf, dynamicBooks }) {
+  const booksToRender = dynamicBooks && dynamicBooks.length > 0 ? dynamicBooks : shelf.books;
+
+  return <section id={shelf.id} className="scroll-mt-24 py-10 sm:py-14"><div className="mb-7 flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-orange-700">{shelf.eyebrow}</p><h2 className="mt-2 text-2xl font-black tracking-tight text-stone-950 sm:text-3xl">{shelf.title}</h2><p className="mt-2 text-sm text-stone-600">{shelf.description}</p></div><a href="#" className="text-sm font-bold text-orange-700">Lihat semua →</a></div><div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-5">{booksToRender === dynamicBooks ? booksToRender.map(book => <DynamicBookCard book={book} key={book.id} />) : booksToRender.map(book => <BookCard book={book} key={book[0]} />)}</div></section>;
 }
 
 function FloatingOrderButtons({ cartCount }) {
@@ -64,9 +96,14 @@ function AccountMenu({ user, onLogout }) {
 }
 
 export default function Home() {
+  const router = useRouter();
+  const [authLoading, setAuthLoading] = useState(true);
   const [health, setHealth] = useState(null);
   const [healthError, setHealthError] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [promoBooks, setPromoBooks] = useState(null);
+  const [latestBooks, setLatestBooks] = useState(null);
+  const [bestsellerBooks, setBestsellerBooks] = useState(null);
   const [user, setUser] = useState(null);
   const [cartCount, setCartCount] = useState(0);
   const [logoutOpen, setLogoutOpen] = useState(false);
@@ -74,6 +111,9 @@ export default function Home() {
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/health`).then(async (response) => { if (!response.ok) throw new Error("Health check failed"); return response.json(); }).then(({ data }) => setHealth(data)).catch(() => setHealthError(true));
     fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/settings`, { headers: { Accept: "application/json" } }).then((response) => response.ok ? response.json() : null).then((payload) => setMarketplace((old) => ({ ...old, ...(payload?.data || {}) }))).catch(() => null);
+    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=promo&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setPromoBooks(payload.data)).catch(() => null);
+    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=newest&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setLatestBooks(payload.data)).catch(() => null);
+    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=bestseller&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setBestsellerBooks(payload.data)).catch(() => null);
   }, []);
 
   useEffect(() => {
@@ -88,37 +128,28 @@ export default function Home() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) return;
+    if (!token) { setAuthLoading(false); return; }
     fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/auth/me`, { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } })
       .then(async (response) => { if (!response.ok) throw new Error("Sesi tidak valid"); return response.json(); })
-      .then((response) => setUser(response.data))
-      .catch(() => localStorage.removeItem("token"));
+      .then((response) => { setUser(response.data); setAuthLoading(false); })
+      .catch(() => { localStorage.removeItem("token"); setAuthLoading(false); });
   }, []);
 
-  const logout = () => setLogoutOpen(true);
-  const confirmLogout = () => { localStorage.removeItem("token"); setUser(null); window.location.href = "/"; };
+  const confirmLogout = () => { localStorage.removeItem("token"); setUser(null); setLogoutOpen(false); };
 
-  useEffect(() => {
-    const routes = { "Tentang kami": "/info/tentang", "Cara belanja": "/info/cara-belanja", Pengiriman: "/info/pengiriman", "Hubungi kami": "/info/kontak", "Lihat semua →": "/cari" };
-    const onClick = (event) => { const link = event.target.closest('a[href="#"]'); if (link && routes[link.textContent.trim()]) { event.preventDefault(); window.location.href = routes[link.textContent.trim()]; } const button = event.target.closest("button"); if (button?.textContent.trim() === "Masuk") window.location.href = "/auth/login"; if (button?.textContent.trim() === "Daftar") window.location.href = "/auth/register"; };
-    document.addEventListener("click", onClick); return () => document.removeEventListener("click", onClick);
-  }, []);
+  function SocialLinks() {
+    return <div className="mt-5 flex gap-4 text-stone-400"><a href="#" className="hover:text-stone-900">Twitter</a><a href="#" className="hover:text-stone-900">Instagram</a><a href="#" className="hover:text-stone-900">Facebook</a></div>;
+  }
 
   return <main className="min-h-screen bg-[#fffdf8] text-stone-900">
-    <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-[#fffdf8]/95 backdrop-blur"><div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-      <a href="#beranda" className="flex items-center gap-2 font-black tracking-tight text-stone-950"><span className="grid h-9 w-9 place-items-center rounded-xl bg-orange-700 text-lg text-white">B</span><span className="text-xl">bukupagi</span></a>
-      <nav className="hidden items-center gap-6 text-sm font-semibold text-stone-600 lg:flex" aria-label="Navigasi utama"><a className="text-stone-950" href="#beranda">Beranda</a><a href="#kategori">Kategori</a><a href="#terbaru">Buku Baru</a><a href="#promo">Promo</a></nav>
-      <form className="hidden max-w-sm flex-1 items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm text-stone-400 shadow-sm lg:flex" onSubmit={(event) => { event.preventDefault(); const q = new FormData(event.currentTarget).get("q")?.toString().trim(); window.location.href = `/cari${q ? `?q=${encodeURIComponent(q)}` : ""}`; }}>⌕<input name="q" className="w-full bg-transparent outline-none" placeholder="Cari judul, penulis, atau ISBN" aria-label="Cari buku" /></form>
-<div className="hidden items-center gap-3 lg:flex"><a href="/keranjang" className="relative grid h-10 w-10 shrink-0 place-items-center rounded-full border border-blue-200 bg-white text-lg text-blue-700 shadow-sm transition hover:bg-blue-50" aria-label="Keranjang belanja" title="Keranjang belanja">🛒<span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-blue-700 px-1 text-[9px] font-black text-white">{cartCount}</span></a>{user ? <AccountMenu user={user} onLogout={logout} /> : <div className="flex items-center gap-2"><button className="text-sm font-bold text-stone-700">Masuk</button><button className="rounded-full bg-stone-950 px-4 py-2 text-sm font-bold text-white">Daftar</button></div>}</div>
-      <button className="grid h-10 w-10 place-items-center rounded-xl border border-stone-200 text-xl lg:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Buka menu" aria-expanded={menuOpen}>☰</button>
-    </div>{menuOpen && <div className="border-t border-stone-200 bg-[#fffdf8] px-4 py-4 lg:hidden"><div className="mx-auto grid max-w-7xl gap-3 text-sm font-bold text-stone-700"><a href="#beranda" onClick={() => setMenuOpen(false)}>Beranda</a><a href="#kategori" onClick={() => setMenuOpen(false)}>Kategori</a><a href="#terbaru" onClick={() => setMenuOpen(false)}>Buku Baru</a><a href="#promo" onClick={() => setMenuOpen(false)}>Promo</a><div className="my-1 border-t border-stone-200"/>{user ? <div className="grid gap-2"><a href={user.is_admin ? "/admin" : "/akun"} className="rounded-xl px-3 py-2.5 hover:bg-blue-50">👤 Akun Saya</a><button onClick={logout} className="rounded-xl px-3 py-2.5 text-left font-bold text-red-600 hover:bg-red-50">↪ Keluar</button></div> : <div className="grid grid-cols-2 gap-2"><a href="/auth/login" className="rounded-xl border border-stone-200 bg-white px-3 py-2.5 text-center">Masuk</a><a href="/auth/register" className="rounded-xl bg-stone-950 px-3 py-2.5 text-center text-white">Daftar</a></div>}</div></div>}</header>
-
-    <section id="beranda" className="border-b border-stone-200 bg-[radial-gradient(circle_at_80%_10%,#fed7aa,transparent_32%),radial-gradient(circle_at_5%_90%,#fde68a,transparent_28%)]"><div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.1fr_.9fr] lg:px-8 lg:py-24"><div><p className="inline-flex rounded-full bg-orange-100 px-3 py-1 text-xs font-bold uppercase tracking-[.18em] text-orange-800">{marketplace.hero_eyebrow || "Temukan cerita berikutnya"}</p><h1 className="mt-5 max-w-2xl text-4xl font-black leading-[1.04] tracking-tight text-stone-950 sm:text-6xl">{marketplace.hero_title || "Buku yang baik, selalu menemukan pembacanya."}</h1><p className="mt-5 max-w-xl text-base leading-7 text-stone-600 sm:text-lg">{marketplace.hero_description || "Pilihan buku untuk menemani rasa ingin tahu, ide besar, dan waktu tenangmu di rumah."}</p><form className="mt-8 flex max-w-xl gap-2 rounded-2xl border border-stone-200 bg-white p-2 shadow-lg shadow-orange-950/5" onSubmit={(event) => { event.preventDefault(); const q = new FormData(event.currentTarget).get("q")?.toString().trim(); window.location.href = `/cari${q ? `?q=${encodeURIComponent(q)}` : ""}`; }}><input name="q" className="min-w-0 flex-1 px-3 text-sm outline-none" placeholder="Mau membaca apa hari ini?" aria-label="Cari koleksi buku" /><button className="shrink-0 rounded-xl bg-orange-700 px-4 py-3 text-sm font-bold text-white">Cari buku</button></form><div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-stone-600"><span>✓ Pilihan kurasi</span><span>✓ Promo mingguan</span><span>✓ Pengiriman ke seluruh Indonesia</span></div></div><div className="relative mx-auto w-full max-w-md"><div className="relative rounded-[2rem] bg-stone-950 p-6 shadow-2xl sm:p-8"><p className="text-xs font-bold uppercase tracking-[.25em] text-orange-300">{marketplace.recommendation_label || "Rekomendasi hari ini"}</p><div className="mt-7 grid grid-cols-[.8fr_1.2fr] items-end gap-5"><div className="aspect-[3/4] rounded-lg bg-gradient-to-br from-orange-300 via-red-600 to-stone-950 p-4 text-white shadow-xl"><p className="text-[9px] font-bold uppercase tracking-[.2em] text-white/70">Novel pilihan</p><p className="mt-5 whitespace-pre-line text-xl font-black leading-none">{marketplace.recommendation_book_title || "Jendela Masa Depan"}</p><p className="mt-8 text-xs">{marketplace.recommendation_book_subtitle || "sebuah cerita untuk pulang"}</p></div><div><p className="text-sm text-stone-400">{marketplace.recommendation_kicker || "Baca, bayangkan, tumbuh."}</p><h2 className="mt-2 text-3xl font-black leading-tight text-white">{marketplace.recommendation_title || "Satu halaman bisa mengubah harimu."}</h2><a href="#terbaru" className="mt-5 inline-flex rounded-full bg-white px-4 py-2 text-sm font-bold text-stone-950">Mulai jelajahi →</a></div></div></div></div></div></section>
-
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"><section id="kategori" className="scroll-mt-24 py-12 sm:py-16"><div className="mb-7"><p className="text-xs font-bold uppercase tracking-[.2em] text-orange-700">Telusuri minatmu</p><h2 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Kategori pilihan</h2></div><div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-5">{categories.map(([name, icon, color]) => <a href="#" className="group rounded-2xl border border-stone-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md" key={name}><span className={`grid h-11 w-11 place-items-center rounded-xl text-xl ${color}`}>{icon}</span><h3 className="mt-5 font-bold">{name}</h3><p className="mt-1 text-sm text-stone-500">Jelajahi koleksi →</p></a>)}</div></section>{shelves.map((shelf) => <Shelf shelf={shelf} key={shelf.id} />)}</div>
-
-    <section id="promo" className="scroll-mt-24 bg-stone-950 py-12 text-white sm:py-16"><div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"><div className="mb-7 flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-orange-300">Harga terbaik</p><h2 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Diskon pilihan</h2><p className="mt-2 text-sm text-stone-300">Buku bagus, alasan lebih banyak untuk membaca.</p></div><span className="rounded-full border border-orange-400/50 px-4 py-2 text-sm font-bold text-orange-200">Promo terbatas</span></div><div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-5">{discounts.map((book) => <BookCard book={book} key={book[0]} />)}</div></div></section>
-
+    <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-[#fffdf8]/95 backdrop-blur"><div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8"><Link href="/" className="flex shrink-0 items-center gap-2 font-black"><span className="grid h-9 w-9 place-items-center rounded-xl bg-blue-700 text-lg text-white">B</span><span className="text-xl">bukupagi</span></Link><nav className="hidden items-center gap-6 text-sm font-semibold text-stone-600 lg:flex"><Link href="#kategori" className="hover:text-stone-900">Kategori</Link><Link href="#terbaru" className="hover:text-stone-900">Buku Baru</Link><Link href="#promo" className="hover:text-stone-900">Promo</Link></nav><form onSubmit={(e) => { e.preventDefault(); const q = new FormData(e.currentTarget).get("q")?.toString().trim(); router.push(`/cari${q ? `?q=${encodeURIComponent(q)}` : ""}`); }} className="hidden max-w-sm flex-1 items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm text-stone-400 shadow-sm lg:flex">⌕<input name="q" className="w-full bg-transparent outline-none" placeholder="Cari judul, penulis, atau ISBN" /></form><div className="hidden items-center gap-3 lg:flex"><Link href="/keranjang" className="relative grid h-10 w-10 place-items-center rounded-full border border-blue-200 bg-white text-lg text-blue-700">🛒<span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-blue-700 px-1 text-[9px] font-black text-white">{cartCount}</span></Link>{authLoading ? <div className="h-9 w-24 animate-pulse rounded-full bg-stone-200"></div> : user ? <div className="relative"><button onClick={() => setLogoutOpen(true)} className="flex items-center gap-2 rounded-full border-2 border-blue-700 bg-white py-1.5 pl-2 pr-3 text-sm font-bold text-slate-700"><span className="grid h-8 w-8 place-items-center rounded-full bg-blue-600 text-white">{user.name?.slice(0, 1).toUpperCase()}</span><span className="max-w-28 truncate">{user.name}</span></button></div> : <><Link href="/auth/login" className="text-sm font-bold text-stone-700">Masuk</Link><Link href="/auth/register" className="rounded-full bg-slate-950 px-4 py-2 text-sm font-bold text-white">Daftar</Link></>}</div></div></header>
+    
+    <section id="beranda" className="border-b border-stone-200 bg-[radial-gradient(circle_at_80%_10%,#fed7aa,transparent_32%),radial-gradient(circle_at_5%_90%,#fde68a,transparent_28%)]"><div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.1fr_.9fr] lg:px-8 lg:py-24"><div><p className="inline-flex rounded-full bg-orange-100 px-3 py-1 text-xs font-bold uppercase tracking-[.18em] text-orange-800">{marketplace.hero_eyebrow || "Temukan cerita berikutnya"}</p><h1 className="mt-5 max-w-2xl text-4xl font-black leading-[1.04] tracking-tight text-stone-950 sm:text-6xl">{marketplace.hero_title || "Buku yang baik, selalu menemukan pembacanya."}</h1><p className="mt-5 max-w-xl text-base leading-7 text-stone-600 sm:text-lg">{marketplace.hero_description || "Pilihan buku untuk menemani rasa ingin tahu, ide besar, dan waktu tenangmu di rumah."}</p><form className="mt-8 flex max-w-xl gap-2 rounded-2xl border border-stone-200 bg-white p-2 shadow-lg shadow-orange-950/5" onSubmit={(event) => { event.preventDefault(); const q = new FormData(event.currentTarget).get("q")?.toString().trim(); router.push( `/cari${q ? `?q=${encodeURIComponent(q)}` : ""}`); }}><input name="q" className="min-w-0 flex-1 px-3 text-sm outline-none" placeholder="Mau membaca apa hari ini?" aria-label="Cari koleksi buku" /><button className="shrink-0 rounded-xl bg-orange-700 px-4 py-3 text-sm font-bold text-white">Cari buku</button></form><div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-stone-600"><span>✓ Pilihan kurasi</span><span>✓ Promo mingguan</span><span>✓ Pengiriman ke seluruh Indonesia</span></div></div><div className="relative mx-auto w-full max-w-md"><div className="relative rounded-[2rem] bg-stone-950 p-6 shadow-2xl sm:p-8"><p className="text-xs font-bold uppercase tracking-[.25em] text-orange-300">{marketplace.recommendation_label || "Rekomendasi hari ini"}</p><div className="mt-7 grid grid-cols-[.8fr_1.2fr] items-end gap-5"><div className="aspect-[3/4] rounded-lg bg-gradient-to-br from-orange-300 via-red-600 to-stone-950 p-4 text-white shadow-xl"><p className="text-[9px] font-bold uppercase tracking-[.2em] text-white/70">Novel pilihan</p><p className="mt-5 whitespace-pre-line text-xl font-black leading-none">{marketplace.recommendation_book_title || "Jendela Masa Depan"}</p><p className="mt-8 text-xs">{marketplace.recommendation_book_subtitle || "sebuah cerita untuk pulang"}</p></div><div><p className="text-sm text-stone-400">{marketplace.recommendation_kicker || "Baca, bayangkan, tumbuh."}</p><h2 className="mt-2 text-3xl font-black leading-tight text-white">{marketplace.recommendation_title || "Satu halaman bisa mengubah harimu."}</h2><a href="#terbaru" className="mt-5 inline-flex rounded-full bg-white px-4 py-2 text-sm font-bold text-stone-950">Mulai jelajahi →</a></div></div></div></div></div></section>
+    
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"><section id="kategori" className="scroll-mt-24 py-12 sm:py-16"><div className="mb-7"><p className="text-xs font-bold uppercase tracking-[.2em] text-orange-700">Telusuri minatmu</p><h2 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Kategori pilihan</h2></div><div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-5">{categories.map(([name, icon, color]) => <Link href="/cari" className="group rounded-2xl border border-stone-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md" key={name}><span className={`grid h-11 w-11 place-items-center rounded-xl text-xl ${color}`}>{icon}</span><h3 className="mt-5 font-bold">{name}</h3><p className="mt-1 text-sm text-stone-500">Jelajahi koleksi →</p></Link>)}</div></section>{shelves.map((shelf) => <Shelf shelf={shelf} key={shelf.id} dynamicBooks={shelf.id === "terbaru" ? latestBooks : shelf.id === "terlaris" ? bestsellerBooks : null} />)}</div>
+    
+    <section id="promo" className="scroll-mt-24 bg-stone-950 py-12 text-white sm:py-16"><div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"><div className="mb-7 flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-orange-300">Harga terbaik</p><h2 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Diskon pilihan</h2><p className="mt-2 text-sm text-stone-300">Buku bagus, alasan lebih banyak untuk membaca.</p></div><span className="rounded-full border border-orange-400/50 px-4 py-2 text-sm font-bold text-orange-200">Promo terbatas</span></div><div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-5">{promoBooks && promoBooks.length > 0 ? promoBooks.map((book) => <DynamicBookCard book={book} key={book.id} />) : discounts.map((book) => <BookCard book={book} key={book[0]} />)}</div></div></section>
+    
     <section className="border-b border-stone-200 bg-orange-100"><div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-5 px-4 py-10 sm:px-6 md:flex-row md:items-center lg:px-8"><div><p className="text-xl font-black text-stone-950">Jangan sampai kehabisan cerita bagus.</p><p className="mt-1 text-sm text-stone-600">Dapatkan kabar koleksi dan promo pilihan setiap minggu.</p></div><form className="flex w-full max-w-md gap-2" onSubmit={(event) => event.preventDefault()}><input className="min-w-0 flex-1 rounded-xl border border-orange-200 bg-white px-4 py-3 text-sm outline-none" type="email" placeholder="Email kamu" aria-label="Email kamu" /><button className="rounded-xl bg-stone-950 px-4 py-3 text-sm font-bold text-white">Berlangganan</button></form></div></section>
     <footer><div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-[1.5fr_1fr_1fr] lg:px-8"><div><div className="flex items-center gap-2 font-black text-stone-950"><span className="grid h-8 w-8 place-items-center rounded-lg bg-orange-700 text-sm text-white">B</span> bukupagi</div><p className="mt-4 max-w-sm whitespace-pre-line text-sm leading-6 text-stone-600">{marketplace.store_address || "Alamat toko belum diatur."}</p><SocialLinks settings={marketplace}/><p className={`mt-5 text-xs font-semibold ${health ? "text-emerald-700" : healthError ? "text-rose-700" : "text-amber-700"}`}>{health ? `● ${health.service} siap` : healthError ? "● API belum dapat dihubungi" : "● Memeriksa layanan…"}</p></div><div><h2 className="font-bold">Jelajahi</h2><div className="mt-4 grid gap-3 text-sm text-stone-600"><a href="#kategori">Kategori</a><a href="#terbaru">Buku baru</a><a href="#terlaris">Terlaris</a><a href="#promo">Promo</a></div></div><div><h2 className="font-bold">Bantuan</h2><div className="mt-4 grid gap-3 text-sm text-stone-600"><a href="#">Tentang kami</a><a href="#">Cara belanja</a><a href="#">Pengiriman</a><a href="#">Hubungi kami</a></div></div></div><div className="border-t border-stone-200"><p className="mx-auto max-w-7xl px-4 py-5 text-xs text-stone-500 sm:px-6 lg:px-8">© 2026 bukupagi. Dibuat untuk pembaca yang selalu ingin tahu.</p></div></footer>
     <FloatingOrderButtons cartCount={cartCount} marketplace={marketplace} />

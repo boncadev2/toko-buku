@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import CustomerHeader from "../../../components/CustomerHeader";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
@@ -73,7 +74,7 @@ export default function ProfilePage() {
     </section></div><footer className="mt-auto border-t border-blue-100 bg-white py-6 text-center text-sm text-slate-500">© 2026 BukuPagi.</footer></main>;
 }
 
-function Sidebar(){return <aside className="hidden h-[280px] self-start rounded-3xl bg-gradient-to-b from-blue-950 to-blue-800 p-4 text-white shadow-xl lg:block"><p className="px-3 pb-3 text-[11px] font-bold uppercase tracking-[.18em] text-blue-300">Menu akun</p><nav className="space-y-1"><a href="/akun" className="block rounded-xl px-3 py-3 text-sm text-blue-100">▦ Dashboard</a><a href="/akun/profil" className="block rounded-xl bg-white/15 px-3 py-3 text-sm font-bold">👤 Profil</a><a href="/akun/pesanan" className="block rounded-xl px-3 py-3 text-sm text-blue-100">▣ Pesanan saya</a><a href="/" className="block rounded-xl px-3 py-3 text-sm text-blue-100">⌂ Kembali berbelanja</a></nav></aside>}
+function Sidebar(){return <aside className="hidden h-[280px] self-start rounded-3xl bg-gradient-to-b from-blue-950 to-blue-800 p-4 text-white shadow-xl lg:block"><p className="px-3 pb-3 text-[11px] font-bold uppercase tracking-[.18em] text-blue-300">Menu akun</p><nav className="space-y-1"><Link href="/akun" className="block rounded-xl px-3 py-3 text-sm text-blue-100">▦ Dashboard</Link><Link href="/akun/profil" className="block rounded-xl bg-white/15 px-3 py-3 text-sm font-bold">👤 Profil</Link><Link href="/akun/pesanan" className="block rounded-xl px-3 py-3 text-sm text-blue-100">▣ Pesanan saya</Link><Link href="/" className="block rounded-xl px-3 py-3 text-sm text-blue-100">⌂ Kembali berbelanja</Link></nav></aside>}
 function Field({label,children}){return <label className="grid gap-1 text-xs font-bold text-slate-600"><span>{label}</span>{children}</label>}
 function Input({label,...props}){return <Field label={label}><input {...props} className="rounded-xl border p-3 text-base font-normal"/></Field>}
 function Combo({label,value,disabled,options,onChange,onSelect}){return <div className="relative grid gap-1 text-xs font-bold text-slate-600"><span>{label}</span><input required disabled={disabled} value={value} onChange={(e)=>onChange(e.target.value)} placeholder={disabled?"Pilih lokasi sebelumnya":"Ketik minimal 2 huruf"} className="rounded-xl border p-3 text-base font-normal disabled:bg-slate-100"/>{options.length>0&&<div className="absolute top-full z-20 mt-1 max-h-60 w-full overflow-auto rounded-xl border bg-white p-1 shadow-xl">{options.map((item)=><button type="button" key={item.key} onClick={()=>onSelect(item)} className="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-blue-50"><b>{item.title}</b>{item.subtitle&&<small className="block text-slate-500">{item.subtitle}</small>}</button>)}</div>}</div>}
