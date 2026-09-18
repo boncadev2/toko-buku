@@ -304,4 +304,161 @@ Untracked files:
 	[31mbackend/setup.sh[m
 
 no changes added to commit (use "git add" and/or "git commit -a")
+[1m[7m%[27m[1m[0m                                                                                                                                                          [0m[27m[24m[Jmacbookprom1@Macbooks-MacBook-Pro toko-buku % [K[?2004hggit add .[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                          [0m[27m[24m[Jmacbookprom1@Macbooks-MacBook-Pro toko-buku % [K[?2004hggit commit -m "backend"[?2004l
+[main 096538c] backend
+ 12 files changed, 366 insertions(+), 5 deletions(-)
+ create mode 100644 backend/database_dump.sql
+ create mode 100644 backend/fix-discounts.js
+ create mode 100644 backend/fix.php
+ create mode 100644 backend/public/test.php
+ create mode 100644 backend/setup.sh
+[1m[7m%[27m[1m[0m                                                                                                                                                          [0m[27m[24m[Jmacbookprom1@Macbooks-MacBook-Pro toko-buku % [K[?2004hggit push[?2004l
+Enumerating objects: 42, done.
+Counting objects:   2% (1/42)Counting objects:   4% (2/42)Counting objects:   7% (3/42)Counting objects:   9% (4/42)Counting objects:  11% (5/42)Counting objects:  14% (6/42)Counting objects:  16% (7/42)Counting objects:  19% (8/42)Counting objects:  21% (9/42)Counting objects:  23% (10/42)Counting objects:  26% (11/42)Counting objects:  28% (12/42)Counting objects:  30% (13/42)Counting objects:  33% (14/42)Counting objects:  35% (15/42)Counting objects:  38% (16/42)Counting objects:  40% (17/42)Counting objects:  42% (18/42)Counting objects:  45% (19/42)Counting objects:  47% (20/42)Counting objects:  50% (21/42)Counting objects:  52% (22/42)Counting objects:  54% (23/42)Counting objects:  57% (24/42)Counting objects:  59% (25/42)Counting objects:  61% (26/42)Counting objects:  64% (27/42)Counting objects:  66% (28/42)Counting objects:  69% (29/42)Counting objects:  71% (30/42)Counting objects:  73% (31/42)Counting objects:  76% (32/42)Counting objects:  78% (33/42)Counting objects:  80% (34/42)Counting objects:  83% (35/42)Counting objects:  85% (36/42)Counting objects:  88% (37/42)Counting objects:  90% (38/42)Counting objects:  92% (39/42)Counting objects:  95% (40/42)Counting objects:  97% (41/42)Counting objects: 100% (42/42)Counting objects: 100% (42/42), done.
+Delta compression using up to 8 threads
+Compressing objects:   4% (1/23)Compressing objects:   8% (2/23)Compressing objects:  13% (3/23)Compressing objects:  17% (4/23)Compressing objects:  21% (5/23)Compressing objects:  26% (6/23)Compressing objects:  30% (7/23)Compressing objects:  34% (8/23)Compressing objects:  39% (9/23)Compressing objects:  43% (10/23)Compressing objects:  47% (11/23)Compressing objects:  52% (12/23)Compressing objects:  56% (13/23)Compressing objects:  60% (14/23)Compressing objects:  65% (15/23)Compressing objects:  69% (16/23)Compressing objects:  73% (17/23)Compressing objects:  78% (18/23)Compressing objects:  82% (19/23)Compressing objects:  86% (20/23)Compressing objects:  91% (21/23)Compressing objects:  95% (22/23)Compressing objects: 100% (23/23)Compressing objects: 100% (23/23), done.
+Writing objects:   4% (1/24)Writing objects:   8% (2/24)Writing objects:  12% (3/24)Writing objects:  16% (4/24)Writing objects:  20% (5/24)Writing objects:  25% (6/24)Writing objects:  29% (7/24)Writing objects:  33% (8/24)Writing objects:  37% (9/24)Writing objects:  41% (10/24)Writing objects:  45% (11/24)Writing objects:  50% (12/24)Writing objects:  54% (13/24)Writing objects:  58% (14/24)Writing objects:  62% (15/24)Writing objects:  66% (16/24)Writing objects:  70% (17/24)Writing objects:  75% (18/24)Writing objects:  79% (19/24)Writing objects:  83% (20/24)Writing objects:  87% (21/24)Writing objects:  91% (22/24)Writing objects:  95% (23/24)Writing objects: 100% (24/24)Writing objects: 100% (24/24), 7.58 KiB | 2.53 MiB/s, done.
+Total 24 (delta 14), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas:   0% (0/14)[Kremote: Resolving deltas:   7% (1/14)[Kremote: Resolving deltas:  14% (2/14)[Kremote: Resolving deltas:  21% (3/14)[Kremote: Resolving deltas:  28% (4/14)[Kremote: Resolving deltas:  35% (5/14)[Kremote: Resolving deltas:  42% (6/14)[Kremote: Resolving deltas:  50% (7/14)[Kremote: Resolving deltas:  57% (8/14)[Kremote: Resolving deltas:  64% (9/14)[Kremote: Resolving deltas:  71% (10/14)[Kremote: Resolving deltas:  78% (11/14)[Kremote: Resolving deltas:  85% (12/14)[Kremote: Resolving deltas:  92% (13/14)[Kremote: Resolving deltas: 100% (14/14)[Kremote: Resolving deltas: 100% (14/14), completed with 14 local objects.[K
+To github.com:boncadev2/toko-buku.git
+   7f367ae..096538c  main -> main
+[1m[7m%[27m[1m[0m                                                                                                                                                          [0m[27m[24m[Jmacbookprom1@Macbooks-MacBook-Pro toko-buku % [K[?2004hccd frontend[1m/[0m[0m [?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                          [0m[27m[24m[Jmacbookprom1@Macbooks-MacBook-Pro frontend % [K[?2004h[7mgrep -R "process.env" \[27m
+[7m  --exclude-dir=node_modules \[27m[K
+[7m  --exclude-dir=.next \[27m[K[A[A[22C[27mg[27mr[27me[27mp[27m [27m-[27mR[27m [27m"[27mp[27mr[27mo[27mc[27me[27ms[27ms[27m.[27me[27mn[27mv[27m"[27m [27m\[1B[27m [27m [27m-[27m-[27me[27mx[27mc[27ml[27mu[27md[27me[27m-[27md[27mi[27mr[27m=[27mn[27mo[27md[27me[27m_[27mm[27mo[27md[27mu[27ml[27me[27ms[27m [27m\[1B[27m [27m [27m-[27m-[27me[27mx[27mc[27ml[27mu[27md[27me[27m-[27md[27mi[27mr[27m=[27m.[27mn[27me[27mx[27mt[27m [27m\[?2004l
+[0m[27m[24m[J> [K[?2004h[?2004l
+./patch-cari.js:const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./patch-shelves.js:  '$&\n    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=newest&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setLatestBooks(payload.data)).catch(() => null);\n    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=bestseller&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setBestsellerBooks(payload.data)).catch(() => null);'
+./patch.js:  'fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/auth/me`, { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } })\n      .then(async (response) => { if (!response.ok) throw new Error("Sesi tidak valid"); return response.json(); })\n      .then((response) => { setUser(response.data); setAuthLoading(false); })\n      .catch(() => { localStorage.removeItem("token"); setAuthLoading(false); });'
+./patch-state.js:  '$&\n    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=promo&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setPromoBooks(payload.data)).catch(() => null);'
+./src/app/sitemap.js:export default function sitemap() { const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:8080"; return ["/","/cari","/buku/laut-bercerita","/buku/atomic-habits"].map((path) => ({ url: `${base}${path}`, lastModified: new Date() })); }
+./src/app/akun/profil/page.jsx:const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/app/page.jsx:    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/health`).then(async (response) => { if (!response.ok) throw new Error("Health check failed"); return response.json(); }).then(({ data }) => setHealth(data)).catch(() => setHealthError(true));
+./src/app/page.jsx:    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/settings`, { headers: { Accept: "application/json" } }).then((response) => response.ok ? response.json() : null).then((payload) => setMarketplace((old) => ({ ...old, ...(payload?.data || {}) }))).catch(() => null);
+./src/app/page.jsx:    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=promo&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setPromoBooks(payload.data)).catch(() => null);
+./src/app/page.jsx:    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=newest&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setLatestBooks(payload.data)).catch(() => null);
+./src/app/page.jsx:    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=bestseller&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setBestsellerBooks(payload.data)).catch(() => null);
+./src/app/page.jsx:    const base = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/app/page.jsx:    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/auth/me`, { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } })
+./src/app/admin/pengaturan/page.jsx:      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/admin/settings`, { method: "POST", headers: adminHeaders(), body });
+./src/app/admin/produk/page.jsx:const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/app/checkout/page.jsx:const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/app/keranjang/page.jsx:const base = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/app/cari/page.jsx:const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/app/robots.js:export default function robots() { return { rules: { userAgent: "*", allow: "/" }, sitemap: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:8080"}/sitemap.xml` }; }
+./src/app/buku/[slug]/client.jsx:const base = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/components/StoreFooter.jsx:    const base = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/components/MarketplaceFloatingButtons.jsx:    const base = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/components/MarketplaceFloatingButtons.jsx:    ["Shopee", settings.shopee_url || process.env.NEXT_PUBLIC_SHOPEE_URL || "", "bg-[#EE4D2D]", <ShopeeLogo key="shopee" />],
+./src/components/MarketplaceFloatingButtons.jsx:    ["Tokopedia", settings.tokopedia_url || process.env.NEXT_PUBLIC_TOKOPEDIA_URL || "", "bg-[#42B549]", <TokopediaLogo key="tokopedia" />],
+./src/components/MarketplaceFloatingButtons.jsx:    ["WhatsApp", settings.whatsapp_url || process.env.NEXT_PUBLIC_WHATSAPP_URL || "", "bg-[#25D366]", <WhatsAppLogo key="whatsapp" />],
+./src/lib/api.js:const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+[1m[7m%[27m[1m[0m                                                                                                                                                          [0m[27m[24m[Jmacbookprom1@Macbooks-MacBook-Pro frontend % [K[?2004hcclear[?2004l
+[H[2J[1m[7m%[27m[1m[0m                                                                                                                                                          [0m[27m[24m[Jmacbookprom1@Macbooks-MacBook-Pro frontend % [K[?2004h[7mcd frontend[27m
+[K
+[7mgrep -R "process.env" \[27m[K
+[7m  --exclude-dir=node_modules \[27m[K
+[7m  --exclude-dir=.next \[27m[K
+[7m  .[27m[K[5A[42C[27mc[27md[27m [27mf[27mr[27mo[27mn[27mt[27me[27mn[27md[2B[27mg[27mr[27me[27mp[27m [27m-[27mR[27m [27m"[27mp[27mr[27mo[27mc[27me[27ms[27ms[27m.[27me[27mn[27mv[27m"[27m [27m\[1B[27m [27m [27m-[27m-[27me[27mx[27mc[27ml[27mu[27md[27me[27m-[27md[27mi[27mr[27m=[27mn[27mo[27md[27me[27m_[27mm[27mo[27md[27mu[27ml[27me[27ms[27m [27m\[1B[27m [27m [27m-[27m-[27me[27mx[27mc[27ml[27mu[27md[27me[27m-[27md[27mi[27mr[27m=[27m.[27mn[27me[27mx[27mt[27m [27m\[1B[27m [27m [27m.[?2004l
+cd: no such file or directory: frontend
+./patch-cari.js:const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./patch-shelves.js:  '$&\n    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=newest&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setLatestBooks(payload.data)).catch(() => null);\n    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=bestseller&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setBestsellerBooks(payload.data)).catch(() => null);'
+./patch.js:  'fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/auth/me`, { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } })\n      .then(async (response) => { if (!response.ok) throw new Error("Sesi tidak valid"); return response.json(); })\n      .then((response) => { setUser(response.data); setAuthLoading(false); })\n      .catch(() => { localStorage.removeItem("token"); setAuthLoading(false); });'
+./patch-state.js:  '$&\n    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=promo&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setPromoBooks(payload.data)).catch(() => null);'
+./src/app/sitemap.js:export default function sitemap() { const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:8080"; return ["/","/cari","/buku/laut-bercerita","/buku/atomic-habits"].map((path) => ({ url: `${base}${path}`, lastModified: new Date() })); }
+./src/app/akun/profil/page.jsx:const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/app/page.jsx:    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/health`).then(async (response) => { if (!response.ok) throw new Error("Health check failed"); return response.json(); }).then(({ data }) => setHealth(data)).catch(() => setHealthError(true));
+./src/app/page.jsx:    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/settings`, { headers: { Accept: "application/json" } }).then((response) => response.ok ? response.json() : null).then((payload) => setMarketplace((old) => ({ ...old, ...(payload?.data || {}) }))).catch(() => null);
+./src/app/page.jsx:    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=promo&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setPromoBooks(payload.data)).catch(() => null);
+./src/app/page.jsx:    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=newest&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setLatestBooks(payload.data)).catch(() => null);
+./src/app/page.jsx:    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=bestseller&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setBestsellerBooks(payload.data)).catch(() => null);
+./src/app/page.jsx:    const base = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/app/page.jsx:    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/auth/me`, { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } })
+./src/app/admin/pengaturan/page.jsx:      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/admin/settings`, { method: "POST", headers: adminHeaders(), body });
+./src/app/admin/produk/page.jsx:const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/app/checkout/page.jsx:const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/app/keranjang/page.jsx:const base = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/app/cari/page.jsx:const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/app/robots.js:export default function robots() { return { rules: { userAgent: "*", allow: "/" }, sitemap: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:8080"}/sitemap.xml` }; }
+./src/app/buku/[slug]/client.jsx:const base = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/components/StoreFooter.jsx:    const base = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/components/MarketplaceFloatingButtons.jsx:    const base = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+./src/components/MarketplaceFloatingButtons.jsx:    ["Shopee", settings.shopee_url || process.env.NEXT_PUBLIC_SHOPEE_URL || "", "bg-[#EE4D2D]", <ShopeeLogo key="shopee" />],
+./src/components/MarketplaceFloatingButtons.jsx:    ["Tokopedia", settings.tokopedia_url || process.env.NEXT_PUBLIC_TOKOPEDIA_URL || "", "bg-[#42B549]", <TokopediaLogo key="tokopedia" />],
+./src/components/MarketplaceFloatingButtons.jsx:    ["WhatsApp", settings.whatsapp_url || process.env.NEXT_PUBLIC_WHATSAPP_URL || "", "bg-[#25D366]", <WhatsAppLogo key="whatsapp" />],
+./src/lib/api.js:const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
+[1m[7m%[27m[1m[0m                                                                                                                                                          [0m[27m[24m[Jmacbookprom1@Macbooks-MacBook-Pro frontend % [K[?2004hcclear[?2004l
+[H[2J[1m[7m%[27m[1m[0m                                                                                                                                                          [0m[27m[24m[Jmacbookprom1@Macbooks-MacBook-Pro frontend % [K[?2004h[7mcd frontend[27m
+[7mnano src/app/robots.js[27m[K[A[23C[27mc[27md[27m [27mf[27mr[27mo[27mn[27mt[27me[27mn[27md[1B[27mn[27ma[27mn[27mo[27m [27ms[27mr[27mc[27m/[27ma[27mp[27mp[27m/[27mr[27mo[27mb[27mo[27mt[27ms[27m.[27mj[27ms[?2004l
+cd: no such file or directory: frontend
+[?1049h[1;12r[1;1H[J[7m  UW PICO 5.09                                                                New Buffer                                                                  [27m[11;1H[K[12;1H[K[11;1H[7m^[27m[7mG[27m Get Help              [7m^[27m[7mO[27m WriteOut              [7m^[27m[7mR[27m Read File             [7m^[27m[7mY[27m Prev Pg               [7m^[27m[7mK[27m Cut Text              [7m^[27m[7mC[27m Cur Pos               [K[12;1H[7m^[27m[7mX[27m Exit                  [7m^[27m[7mJ[27m Justify               [7m^[27m[7mW[27m Where is              [7m^[27m[7mV[27m Next Pg               [7m^[27m[7mU[27m UnCut Text            [7m^[27m[7mT[27m To Spell              [K[3;1H[10;1H                                                                                                                                                          [10;70H[7m[ Reading file ][27m[10;1H                                                                                                                                                          [10;70H[7m[ Read 1 line ][27m[1;1H[J[7m  UW PICO 5.09                                                         File: src/app/robots.js                                                            [27m[3;1Hexport default function robots() { return { rules: { userAgent: "*", allow: "/" }, sitemap: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:8080$[11;1H[K[12;1H[K[11;1H[7m^[27m[7mG[27m Get Help              [7m^[27m[7mO[27m WriteOut              [7m^[27m[7mR[27m Read File             [7m^[27m[7mY[27m Prev Pg               [7m^[27m[7mK[27m Cut Text              [7m^[27m[7mC[27m Cur Pos               [K[12;1H[7m^[27m[7mX[27m Exit                  [7m^[27m[7mJ[27m Justify               [7m^[27m[7mW[27m Where is              [7m^[27m[7mV[27m Next Pg               [7m^[27m[7mU[27m UnCut Text            [7m^[27m[7mT[27m To Spell              [K[3;1H[10;1H                                                                                                                                                          [10;66H[7m[ Unknown Command: ^Z ][27m[3;1H[10;1H                                                                                                                                                          [10;66H[7m[ Unknown Command: ^Z ][27m[3;1H[10;1H                                                                                                                                                          [10;54H[7m[ line 1 of 2 (50%), character 0 of 174 (0%) ][27m[3;1H[11;1H[K[12;1H[K[?1049l[1m[7m%[27m[1m[0m                                                                                                                                                          [0m[27m[24m[Jmacbookprom1@Macbooks-MacBook-Pro frontend % [K[?2004h[7mcd frontend[27m
+[7mnano src/app/robots.js[27m[K[A[23C[27mc[27md[27m [27mf[27mr[27mo[27mn[27mt[27me[27mn[27md[1B[27mn[27ma[27mn[27mo[27m [27ms[27mr[27mc[27m/[27ma[27mp[27mp[27m/[27mr[27mo[27mb[27mo[27mt[27ms[27m.[27mj[27ms[?2004l
+cd: no such file or directory: frontend
+[?1049h[1;12r[1;1H[J[7m  UW PICO 5.09                                                                New Buffer                                                                  [27m[11;1H[K[12;1H[K[11;1H[7m^[27m[7mG[27m Get Help              [7m^[27m[7mO[27m WriteOut              [7m^[27m[7mR[27m Read File             [7m^[27m[7mY[27m Prev Pg               [7m^[27m[7mK[27m Cut Text              [7m^[27m[7mC[27m Cur Pos               [K[12;1H[7m^[27m[7mX[27m Exit                  [7m^[27m[7mJ[27m Justify               [7m^[27m[7mW[27m Where is              [7m^[27m[7mV[27m Next Pg               [7m^[27m[7mU[27m UnCut Text            [7m^[27m[7mT[27m To Spell              [K[3;1H[10;1H                                                                                                                                                          [10;70H[7m[ Reading file ][27m[10;1H                                                                                                                                                          [10;70H[7m[ Read 1 line ][27m[1;1H[J[7m  UW PICO 5.09                                                         File: src/app/robots.js                                                            [27m[3;1Hexport default function robots() { return { rules: { userAgent: "*", allow: "/" }, sitemap: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:8080$[11;1H[K[12;1H[K[11;1H[7m^[27m[7mG[27m Get Help              [7m^[27m[7mO[27m WriteOut              [7m^[27m[7mR[27m Read File             [7m^[27m[7mY[27m Prev Pg               [7m^[27m[7mK[27m Cut Text              [7m^[27m[7mC[27m Cur Pos               [K[12;1H[7m^[27m[7mX[27m Exit                  [7m^[27m[7mJ[27m Justify               [7m^[27m[7mW[27m Where is              [7m^[27m[7mV[27m Next Pg               [7m^[27m[7mU[27m UnCut Text            [7m^[27m[7mT[27m To Spell              [K[3;1H[11;1H[K[12;1H[K[?1049l[1m[7m%[27m[1m[0m                                                                                                                                                          [0m[27m[24m[Jmacbookprom1@Macbooks-MacBook-Pro frontend % [K[?2004h[7mnpm run build[27m[13D[27mn[27mp[27mm[27m [27mr[27mu[27mn[27m [27mb[27mu[27mi[27ml[27md[?2004l
+
+> frontend@0.1.0 build
+> next build
+
+[1G[0K[1m[38;2;173;127;168m▲ Next.js 16.3.5[39m[22m (Turbopack)
+[32m[1m✓[22m[39m Running next.config.mjs took 9ms
+
+[37m[1m [22m[39m Creating an optimized production build ...
+[32m[1m✓[22m[39m Compiled successfully in 1604ms
+[?25l[37m[1m [22m[39m Running TypeScript  [36m.[39m[2K[1G[?25h[?25l[37m[1m [22m[39m Finished TypeScript in 3ms  [36m.[39m[2K[1G[?25h[37m[1m [22m[39m Finished TypeScript in 3ms    [32m[1m✓[22m[39m Finished TypeScript in 3ms 
+[?25l[37m[1m [22m[39m Collecting page data using 7 workers  [36m.[39m[2K[1G[37m[1m [22m[39m Collecting page data using 7 workers  [36m..[39m[2K[1G[37m[1m [22m[39m Collecting page data using 7 workers  [36m...[39m[2K[1G[37m[1m [22m[39m Collecting page data using 7 workers  [36m.[39m[2K[1G[37m[1m [22m[39m Collecting page data using 7 workers  [36m..[39m[2K[1G[37m[1m [22m[39m Collecting page data using 7 workers  [36m...[39m[2K[1G[37m[1m [22m[39m Collecting page data using 7 workers  [36m.[39m[2K[1G[37m[1m [22m[39m Collecting page data using 7 workers  [36m..[39m[2K[1G[37m[1m [22m[39m Collecting page data using 7 workers  [36m...[39m[2K[1G[37m[1m [22m[39m Collecting page data using 7 workers  [36m.[39m[2K[1G[?25h[37m[1m [22m[39m Collecting page data using 7 workers in 1986ms    [32m[1m✓[22m[39m Collecting page data using 7 workers in 1986ms 
+[?25l[37m[1m [22m[39m Generating static pages using 7 workers (0/38)  [36m[    ][39m[2K[1G[37m[1m [22m[39m Generating static pages using 7 workers (8/38)  [36m[=   ][39m[2K[1G[?25h[32m[1m✓[22m[39m Generating static pages using 7 workers (38/38) in 343ms
+[?25l[37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G[37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G[37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G[?25h[37m[1m [22m[39m Finalizing page optimization in 569ms    [32m[1m✓[22m[39m Finalizing page optimization in 569ms 
+
+[4mRoute (app)[24m
+┌ ○ /
+├ ○ /_not-found
+├ ○ /admin
+├ ○ /admin/inventori
+├ ○ /admin/keuangan
+├ ○ /admin/pelanggan
+├ ○ /admin/pengaturan
+├ ○ /admin/pesanan
+├ ○ /admin/produk
+├ ○ /akun
+├ ○ /akun/alamat
+├ ○ /akun/pesanan
+├ ○ /akun/profil
+├   /auth/[mode]
+│ ├ ● /auth/login
+│ ├ ● /auth/register
+│ └ ● /auth/forgot-password
+├   /buku/[slug]
+│ ├ ● /buku/laut-bercerita
+│ ├ ● /buku/bumi-manusia
+│ ├ ● /buku/atomic-habits
+│ └ ● [+5 more paths]
+├ ○ /cari
+├ ○ /checkout
+├   /info/[slug]
+│ ├ ● /info/tentang-kami
+│ ├ ● /info/syarat-ketentuan
+│ ├ ● /info/kebijakan-privasi
+│ └ ● [+4 more paths]
+├ ○ /keranjang
+├ ○ /robots.txt
+└ ○ /sitemap.xml
+
+
+○  (Static)  prerendered as static content
+●  (SSG)     prerendered as static HTML (uses [36mgenerateStaticParams[39m)
+
+[?25h[1G[0K⠙[1G[0K[1m[7m%[27m[1m[0m                                                                                                                                                          [0m[27m[24m[Jmacbookprom1@Macbooks-MacBook-Pro frontend % [K[?2004hccd ..[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                          [0m[27m[24m[Jmacbookprom1@Macbooks-MacBook-Pro toko-buku % [K[?2004hggit status[?2004l
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	[31mmodified:   backend/setup.sh[m
+	[31mmodified:   frontend/src/app/robots.js[m
+	[31mmodified:   frontend/src/app/sitemap.js[m
+
+no changes added to commit (use "git add" and/or "git commit -a")
 [1m[7m%[27m[1m[0m                                                                                                                                                          [0m[27m[24m[Jmacbookprom1@Macbooks-MacBook-Pro toko-buku % [K[?2004h

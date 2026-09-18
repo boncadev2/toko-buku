@@ -1,1 +1,14 @@
-export default function robots() { return { rules: { userAgent: "*", allow: "/" }, sitemap: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:8080"}/sitemap.xml` }; }
+export const dynamic = "force-static";
+
+export default function robots() {
+    const base =
+        process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:8080";
+
+    return {
+        rules: {
+            userAgent: "*",
+            allow: "/",
+        },
+        sitemap: `${base}/sitemap.xml`,
+    };
+}
