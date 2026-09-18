@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 import { useEffect, useState } from "react";
 import { api } from "../../lib/api";
+import LogoutConfirmModal from "../../components/LogoutConfirmModal";
 
 const rupiah = (value) => `Rp${Number(value || 0).toLocaleString("id-ID")}`;
 const statusLabel = (status) => String(status || "diproses").replaceAll("_", " ");
@@ -12,6 +13,7 @@ export default function AccountPage() {
   const [error, setError] = useState("");
   const [profileOpen, setProfileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -21,7 +23,8 @@ export default function AccountPage() {
       .catch(() => setError("Sesi Anda sudah berakhir. Silakan masuk kembali."));
   }, []);
 
-  const logout = () => { localStorage.removeItem("token"); window.location.href = "/"; };
+  const logout = () => setLogoutOpen(true);
+  const confirmLogout = () => { localStorage.removeItem("token"); window.location.href = "/"; };
   if (error) return <main className="grid min-h-screen place-items-center bg-[#f4f8ff] p-6"><section className="w-full max-w-md rounded-[28px] bg-white p-8 text-center shadow-xl shadow-blue-950/5"><div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-red-50 text-2xl">!</div><h1 className="mt-5 text-xl font-black text-slate-900">Tidak dapat membuka akun</h1><p className="mt-2 text-sm text-slate-500">{error}</p><a href="/auth/login" className="mt-6 inline-flex rounded-xl bg-blue-700 px-5 py-3 text-sm font-bold text-white">Masuk kembali</a></section></main>;
   if (!data) return <main className="grid min-h-screen place-items-center bg-[#f4f8ff]"><div className="text-center"><div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-blue-100 border-t-blue-700"/><p className="mt-4 text-sm font-semibold text-slate-500">Menyiapkan dashboard Anda…</p></div></main>;
 
@@ -39,7 +42,7 @@ export default function AccountPage() {
         <div className="mt-6 grid gap-6 xl:grid-cols-[1.35fr_.85fr]"><section id="pesanan" className="rounded-3xl border border-blue-100 bg-white p-6 shadow-sm"><div className="flex items-center justify-between"><div><p className="text-lg font-black">Pesanan terbaru</p><p className="mt-1 text-sm text-slate-500">Pantau status belanja Anda.</p></div><span className="rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-700">{orders.length} pesanan</span></div>{orders.length ? <div className="mt-5 space-y-3">{orders.slice(0, 4).map((order) => <article key={order.id} className="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-100 p-4"><span className="grid h-10 w-10 place-items-center rounded-xl bg-blue-50">📦</span><div className="min-w-[145px] flex-1"><b className="block text-sm text-slate-800">{order.number}</b><small className="text-slate-500">{new Date(order.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}</small></div><span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-bold capitalize text-amber-700">{statusLabel(order.status)}</span><b className="text-sm text-slate-800">{rupiah(order.grand_total)}</b></article>)}</div> : <div className="mt-5 rounded-2xl bg-slate-50 px-5 py-9 text-center"><p className="text-3xl">🛍️</p><b className="mt-3 block">Belum ada pesanan</b><p className="mt-1 text-sm text-slate-500">Yuk, temukan buku pilihanmu hari ini.</p><a href="/cari" className="mt-4 inline-block text-sm font-bold text-blue-700">Mulai belanja →</a></div>}</section>
           <section id="alamat" className="rounded-3xl border border-blue-100 bg-white p-6 shadow-sm"><p className="text-lg font-black">Alamat pengiriman</p><p className="mt-1 text-sm text-slate-500">Alamat utama untuk pesanan Anda.</p>{addresses.length ? <div className="mt-5 rounded-2xl bg-blue-50 p-4 text-sm leading-6 text-slate-600"><b className="block text-slate-800">{addresses[0].recipient_name || user.name}</b><p>{addresses[0].phone}</p><p>{addresses[0].address}, {addresses[0].city}</p></div> : <div className="mt-5 rounded-2xl border border-dashed border-blue-200 p-5 text-center"><p className="text-2xl">⌖</p><p className="mt-2 text-sm text-slate-500">Belum ada alamat tersimpan.</p><button className="mt-3 text-sm font-bold text-blue-700">+ Tambah alamat</button></div>}<div className="mt-6 rounded-2xl bg-cyan-50 p-4"><b className="text-sm text-cyan-900">Butuh bantuan?</b><p className="mt-1 text-xs leading-5 text-cyan-800">Tim BukuPagi siap membantu pesanan dan pengiriman Anda.</p><a href="/info/kontak" className="mt-3 inline-block text-sm font-bold text-cyan-700">Hubungi kami →</a></div></section></div>
       </section>
-    </div><footer className="border-t border-blue-100 bg-white"><div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-6 text-sm text-slate-500"><span>© 2026 BukuPagi. Semua hak dilindungi.</span><div className="flex gap-4"><a href="/info/tentang">Tentang</a><a href="/info/kontak">Bantuan</a><a href="/info/pengiriman">Pengiriman</a></div></div></footer>
+    </div><LogoutConfirmModal open={logoutOpen} onCancel={() => setLogoutOpen(false)} onConfirm={confirmLogout}/><footer className="border-t border-blue-100 bg-white"><div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-6 text-sm text-slate-500"><span>© 2026 BukuPagi. Semua hak dilindungi.</span><div className="flex gap-4"><a href="/info/tentang">Tentang</a><a href="/info/kontak">Bantuan</a><a href="/info/pengiriman">Pengiriman</a></div></div></footer>
   </main>;
 }
 

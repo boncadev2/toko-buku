@@ -2,6 +2,7 @@
 
 /* eslint-disable @next/next/no-html-link-for-pages */
 import { useEffect, useState } from "react";
+import CustomerHeader from "../../components/CustomerHeader";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
 const money = (value) => `Rp${Number(value || 0).toLocaleString("id-ID")}`;
@@ -137,7 +138,7 @@ export default function CheckoutPage() {
   const selectedSubtotal = (cart?.items || []).filter((item) => itemIds.includes(item.id)).reduce((sum, item) => sum + Number(item.subtotal), 0);
 
   return <main className="min-h-screen bg-[#f4f8ff] text-slate-900">
-    <header className="border-b border-blue-100 bg-white"><div className="mx-auto flex max-w-5xl justify-between px-5 py-4"><a href="/" className="font-black text-blue-950">📚 BukuPagi</a><a href="/keranjang" className="text-sm font-bold text-blue-700">← Keranjang</a></div></header>
+    <CustomerHeader user={user} active=""/>
     <form onSubmit={submit} className="mx-auto grid max-w-5xl gap-6 px-5 py-9 lg:grid-cols-[1fr_320px]">
       <section className="rounded-3xl bg-white p-6 shadow-sm"><p className="text-sm font-semibold text-blue-700">Langkah checkout</p><h1 className="mt-1 text-3xl font-black">Alamat pengiriman</h1>
         {user ? <div className="mt-6"><p className="mb-3 text-sm font-bold">Pilih alamat tersimpan</p>{addresses.length ? <div className="grid gap-3">{addresses.map((address) => <label key={address.id} className={`cursor-pointer rounded-2xl border p-4 ${selectedAddress === String(address.id) ? "border-blue-600 bg-blue-50" : "border-slate-200"}`}><input type="radio" className="mr-2" checked={selectedAddress === String(address.id)} onChange={() => { setSelectedAddress(String(address.id)); calculateShipping(address); }}/><b>{address.label || "Alamat"}</b><p className="mt-2 text-sm text-slate-600">{address.recipient_name} · {address.phone}</p><p className="mt-1 text-sm text-slate-500">{address.address_line_1}, {address.city}, {address.province} {address.postal_code}</p></label>)}</div> : <p className="rounded-xl bg-amber-50 p-4 text-sm text-amber-800">Belum ada alamat tersimpan. Tambahkan alamat melalui halaman akun.</p>}</div> :

@@ -2,8 +2,14 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
 
 export async function api(path, options = {}) {
   const response = await fetch(`${apiUrl}${path}`, { ...options, headers: { Accept: "application/json", ...options.headers } });
-  if (!response.ok) throw new Error(`API request failed: ${response.status}`);
-  return response.json();
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const error = new Error(payload.message || `API request failed: ${response.status}`);
+    error.status = response.status;
+    error.data = payload;
+    throw error;
+  }
+  return payload;
 }
 
 export const catalogApi = {

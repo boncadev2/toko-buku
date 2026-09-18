@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
-import AccountMobileMenu from "../../../components/AccountMobileMenu";
+import CustomerHeader from "../../../components/CustomerHeader";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";
 const provinces = ["Aceh", "Sumatera Utara", "Sumatera Barat", "Riau", "Kepulauan Riau", "Jambi", "Sumatera Selatan", "Kepulauan Bangka Belitung", "Bengkulu", "Lampung", "DKI Jakarta", "Banten", "Jawa Barat", "Jawa Tengah", "DI Yogyakarta", "Jawa Timur", "Bali", "Nusa Tenggara Barat", "Nusa Tenggara Timur", "Kalimantan Barat", "Kalimantan Tengah", "Kalimantan Selatan", "Kalimantan Timur", "Kalimantan Utara", "Sulawesi Utara", "Gorontalo", "Sulawesi Tengah", "Sulawesi Barat", "Sulawesi Selatan", "Sulawesi Tenggara", "Maluku", "Maluku Utara", "Papua Barat", "Papua Barat Daya", "Papua", "Papua Tengah", "Papua Pegunungan", "Papua Selatan"];
@@ -60,7 +60,7 @@ export default function ProfilePage() {
 
   const remove = async (id) => { if (!confirm("Hapus alamat ini?")) return; await fetch(`${apiUrl}/account/addresses/${id}`, { method: "DELETE", headers }); await load(); };
 
-  return <main className="flex min-h-screen flex-col bg-[#f4f8ff] text-slate-800"><header className="border-b border-blue-100 bg-white"><div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-4"><a href="/" className="font-black text-blue-950">📚 BukuPagi</a><AccountMobileMenu active="profile"/><a href="/akun" className="hidden text-sm font-bold text-blue-700 lg:block">← Dashboard</a></div></header>
+  return <main className="flex min-h-screen flex-col bg-[#f4f8ff] text-slate-800"><CustomerHeader user={account?.user} active="profile"/>
     <div className="mx-auto grid w-full max-w-7xl flex-1 gap-6 px-5 py-7 lg:grid-cols-[235px_1fr]"><Sidebar/><section><p className="text-sm font-semibold text-blue-700">Akun pelanggan</p><h1 className="mt-1 text-3xl font-black">Profil & Alamat Pengiriman</h1><p className="mt-2 text-sm text-slate-500">Alamat terverifikasi akan otomatis dipakai Biteship ketika menghitung ongkir.</p>
       {account && <div className="mt-6 rounded-3xl bg-gradient-to-r from-blue-900 to-blue-700 p-6 text-white"><b className="text-xl">{account.user.name}</b><p className="mt-1 text-sm text-blue-100">{account.user.email} · {account.user.phone || "Nomor telepon belum diisi"}</p></div>}
       <div className="mt-6 grid gap-6 xl:grid-cols-[1.1fr_.9fr]"><form onSubmit={save} className="rounded-3xl bg-white p-6 shadow-sm"><h2 className="text-lg font-black">Tambah alamat</h2><div className="mt-5 grid gap-4 sm:grid-cols-2"><Input name="label" label="Label alamat" placeholder="Rumah / Kantor"/><Input name="recipient_name" label="Nama penerima" required/><Input name="phone" label="Nomor telepon" required/>

@@ -67,6 +67,7 @@ Route::post('/reviews', [ReviewController::class, 'store'])->middleware('auth:sa
 Route::patch('/admin/reviews/{review}', [ReviewController::class, 'moderate'])->middleware(['auth:sanctum','permission:catalog.update']);
 Route::get('/settings', [SettingController::class, 'public']);
 Route::put('/admin/settings', [SettingController::class, 'update'])->middleware(['auth:sanctum','permission:settings.update']);
+Route::post('/admin/settings', [SettingController::class, 'update'])->middleware(['auth:sanctum','permission:settings.update']);
 Route::get('/books', [PublicCatalogController::class, 'books']);
 Route::get('/books/{book:slug}', [PublicCatalogController::class, 'show']);
 Route::get('/categories', [PublicCatalogController::class, 'categories']);

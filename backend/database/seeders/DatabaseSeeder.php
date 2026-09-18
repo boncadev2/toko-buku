@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
 
         $assignments = [
             'super-admin' => $permissions->keys()->all(),
-            'admin' => ['catalog.view', 'catalog.create', 'catalog.update', 'catalog.delete', 'catalog.restore', 'order.view', 'order.update', 'customer.view', 'customer.update', 'settings.view', 'settings.update'],
+            'admin' => ['catalog.view', 'catalog.create', 'catalog.update', 'catalog.delete', 'catalog.restore', 'order.view', 'order.update', 'customer.view', 'customer.update', 'finance.view', 'settings.view', 'settings.update'],
             'cashier' => ['order.view', 'order.update', 'customer.view'],
             'warehouse' => ['catalog.view', 'catalog.update', 'order.view'],
             'finance' => ['order.view', 'finance.view'],
