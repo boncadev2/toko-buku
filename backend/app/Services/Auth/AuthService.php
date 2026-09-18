@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Models\Role;
 
 class AuthService
 {
@@ -20,6 +21,10 @@ class AuthService
             'password' => $attributes['password'],
             'status' => 'active',
         ]);
+
+        if ($role = Role::where('name', 'customer')->first()) {
+            $user->roles()->attach($role);
+        }
 
         return ['user' => $user, 'token' => $this->tokenFor($user, $attributes['device_name'] ?? 'api')];
     }

@@ -44,6 +44,23 @@ class Book extends Model
         ];
     }
 
+    public function getFinalPriceAttribute(): float
+    {
+        $now = now();
+        if ($this->discount_type && $this->discount_value > 0) {
+            $validStart = !$this->discount_start_at || $this->discount_start_at <= $now;
+            $validEnd = !$this->discount_end_at || $this->discount_end_at >= $now;
+            if ($validStart && $validEnd) {
+                if ($this->discount_type === 'percentage') {
+                    return max(0, $this->price - ($this->price * ($this->discount_value / 100)));
+                } elseif ($this->discount_type === 'fixed') {
+                    return max(0, $this->price - $this->discount_value);
+                }
+            }
+        }
+        return (float) $this->price;
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
