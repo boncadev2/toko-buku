@@ -6,7 +6,7 @@ import { api } from "../../../lib/api";
 import AdminShell, { adminHeaders, ErrorBox, Loading } from "../../../components/AdminShell";
 
 const defaults = {
-  app_name: "BukuPagi", app_logo: "", store_address: "",
+  app_name: "", app_logo: "", store_address: "",
   hero_eyebrow: "Temukan cerita berikutnya",
   hero_title: "Buku yang baik, selalu menemukan pembacanya.",
   hero_description: "Pilihan buku untuk menemani rasa ingin tahu, ide besar, dan waktu tenangmu di rumah.",
@@ -77,7 +77,7 @@ export default function SettingsPage() {
 
   return <AdminShell title="Pengaturan" description="Kelola identitas, landing page, dan informasi toko.">
     <form onSubmit={save} className="mt-6 space-y-6">
-      <Card title="Identitas Aplikasi" description="Nama dan logo utama yang ditampilkan pada aplikasi."><div className="grid gap-5 md:grid-cols-[1fr_260px]"><TextField label="Nama aplikasi" value={form.app_name} onChange={(value) => change("app_name", value)} required/><div><p className="text-xs font-bold text-slate-600">Logo aplikasi</p><div className="mt-2 flex items-center gap-4">{preview ? <img src={preview} alt="Logo aplikasi" className="h-20 w-20 rounded-2xl border object-contain p-2"/> : <span className="grid h-20 w-20 place-items-center rounded-2xl bg-blue-700 text-3xl text-white">📚</span>}<input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={(event) => { const file = event.target.files?.[0] || null; setLogo(file); if (file) setPreview(URL.createObjectURL(file)); }} className="min-w-0 text-xs"/></div><small className="mt-2 block text-slate-400">PNG, JPG, WebP, atau SVG. Maksimal 2 MB.</small></div></div></Card>
+      <Card title="Identitas Aplikasi" description="Nama dan logo utama yang ditampilkan pada aplikasi."><div className="grid gap-5 md:grid-cols-[1fr_260px]"><TextField label="Nama aplikasi" value={form.app_name} onChange={(value) => change("app_name", value)} required/><div><p className="text-xs font-bold text-slate-600">Logo aplikasi</p><div className="mt-2 flex items-center gap-4">{preview ? <img src={preview} alt="Logo aplikasi" className="h-20 w-20 rounded-2xl border object-contain p-2"/> : <span className="grid h-20 w-20 place-items-center rounded-2xl bg-blue-700 text-3xl text-white">{(form.app_name || " ")[0].toUpperCase()}</span>}<input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={(event) => { const file = event.target.files?.[0] || null; setLogo(file); if (file) setPreview(URL.createObjectURL(file)); }} className="min-w-0 text-xs"/></div><small className="mt-2 block text-slate-400">PNG, JPG, WebP, atau SVG. Maksimal 2 MB.</small></div></div></Card>
 
       <Card title="Hero" description="Atur teks utama dan kartu rekomendasi pada bagian atas landing page."><div className="grid gap-5 md:grid-cols-2">{heroFields.map(([key, label, help]) => <TextField key={key} label={label} help={help} value={form[key]} onChange={(value) => change(key, value)} textarea={key === "hero_description" || key === "recommendation_title"}/>)}</div></Card>
 

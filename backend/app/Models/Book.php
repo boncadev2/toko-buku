@@ -71,6 +71,12 @@ class Book extends Model
         return $this->hasMany(BookImage::class)->orderBy('sort_order');
     }
 
+    
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
     public function stockMovements(): HasMany
     {
         return $this->hasMany(StockMovement::class);

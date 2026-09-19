@@ -64,6 +64,10 @@ export default function CheckoutPage() {
         const availableIds=(payload.data?.items||[]).map((item)=>item.id);
         const savedIds=JSON.parse(localStorage.getItem("checkout_item_ids")||"[]").filter((id)=>availableIds.includes(id));
         const selectedIds=savedIds.length?savedIds:availableIds;
+        if (!selectedIds.length) {
+          window.location.href = localStorage.getItem("token") ? "/akun/pesanan" : "/keranjang";
+          return;
+        }
         setItemIds(selectedIds); localStorage.setItem("checkout_item_ids",JSON.stringify(selectedIds));
       })
       .catch(() => setMessage("Ringkasan keranjang belum dapat dimuat."));
@@ -98,7 +102,7 @@ export default function CheckoutPage() {
     return () => clearTimeout(timer);
   }, [districtQuery, location.city, location.district, location.province]);
 
-  const submit = async (event) => {
+  const submit = async (event) => { const method = event.nativeEvent.submitter?.value || "midtrans";
     event.preventDefault(); setMessage("Memeriksa pesanan…"); const form = new FormData(event.currentTarget); let address;
     if (user) {
       const saved = addresses.find((item) => String(item.id) === selectedAddress);
@@ -112,8 +116,43 @@ export default function CheckoutPage() {
     if (!itemIds.length) return setMessage("Pilih minimal satu buku dari halaman keranjang.");
     const check = await fetch(`${apiUrl}/checkout/preview`, { method: "POST", headers: authHeaders(), body: JSON.stringify(user ? { address_id: Number(selectedAddress), item_ids: itemIds } : { guest_address: address, item_ids: itemIds }) });
     const checked = await check.json(); if (!check.ok) return setMessage(checked.message || "Periksa kembali alamat dan keranjang Anda.");
-    const response = await fetch(`${apiUrl}/checkout`, { method: "POST", headers: authHeaders(), body: JSON.stringify({ address, item_ids: itemIds }) });
-    const payload = await response.json(); if(response.ok)localStorage.removeItem("checkout_item_ids"); setMessage(response.ok ? `Pesanan ${payload.data.number} berhasil dibuat.` : payload.message || "Pesanan belum dapat dibuat.");
+    const response = await fetch(`${apiUrl}/checkout`, { method: "POST", headers: authHeaders(), body: JSON.stringify({ address, item_ids: itemIds, shipping_cost: selectedQuote ? Number(selectedQuote.cost ?? selectedQuote.price ?? selectedQuote.final_price ?? 0) : 0 }) });
+    const payload = await response.json(); 
+    if(response.ok) {
+      localStorage.removeItem("checkout_item_ids");
+      // no-op 
+      if (method === "wa") {
+        setMessage(`Mengarahkan ke WhatsApp...`);
+        try {
+          const waRes = await fetch(`${apiUrl}/orders/${payload.data.id}/whatsapp`, { method: "POST", headers: authHeaders() });
+          const waPayload = await waRes.json();
+          if (waRes.ok && waPayload.data?.url) {
+            window.location.href = waPayload.data.url;
+          } else {
+            setMessage("Gagal memuat link WhatsApp.");
+            setTimeout(() => { window.location.href = user ? "/akun/pesanan" : "/"; }, 3000);
+          }
+        } catch(e) {
+          setMessage("Gagal menghubungi server.");
+        }
+      } else {
+      try {
+        const payRes = await fetch(`${apiUrl}/orders/${payload.data.id}/payment/midtrans`, { method: "POST", headers: authHeaders() });
+        const payPayload = await payRes.json();
+        if (payRes.ok && payPayload.data?.redirect_url) {
+          window.location.href = payPayload.data.redirect_url;
+        } else {
+          setMessage(`Pesanan berhasil dibuat, namun gagal memuat pembayaran. Silakan periksa halaman Pesanan Anda.`);
+          setTimeout(() => { window.location.href = user ? "/akun/pesanan" : "/"; }, 3000);
+        }
+      } catch (err) {
+        setMessage(`Gagal menghubungi sistem pembayaran.`);
+        setTimeout(() => { window.location.href = user ? "/akun/pesanan" : "/"; }, 3000);
+      }
+      }
+    } else {
+      setMessage(payload.message || "Pesanan belum dapat dibuat.");
+    }
   };
 
   const selectCity = (area) => {
@@ -151,7 +190,10 @@ export default function CheckoutPage() {
         </div>}
         <div className="mt-7 border-t pt-6"><h2 className="font-black">Pilihan pengiriman</h2>{shippingLoading ? <p className="mt-3 text-sm text-blue-700">Menghitung ongkir…</p> : quotes.length ? <div className="mt-3 grid gap-2">{quotes.slice(0, 6).map((quote, index) => <Quote key={index} quote={quote} selected={selectedQuote === quote} onSelect={() => setSelectedQuote(quote)}/>)}</div> : <p className="mt-3 text-sm text-slate-500">Pilih wilayah dari dropdown Biteship dan ketik kode pos untuk melihat ongkir.</p>}</div>
       </section>
-      <aside className="h-fit rounded-3xl bg-white p-6 shadow-sm"><h2 className="font-black">Konfirmasi checkout</h2><p className="mt-2 text-sm leading-6 text-slate-500">{itemIds.length} item keranjang dipilih. Ongkir diperbarui sesuai lokasi.</p><div className="mt-5 space-y-3 rounded-xl bg-blue-50 p-4 text-sm"><div className="flex justify-between"><span>Subtotal belanja</span><b>{cart ? money(selectedSubtotal) : "Memuat…"}</b></div><div className="flex justify-between"><span>Ongkir</span><b>{selectedQuote ? money(selectedQuote.cost ?? selectedQuote.price ?? selectedQuote.final_price) : "—"}</b></div><div className="flex justify-between border-t border-blue-200 pt-3 text-base"><b>Total belanja</b><b className="text-blue-700">{cart ? money(selectedSubtotal + Number(selectedQuote?.cost ?? selectedQuote?.price ?? selectedQuote?.final_price ?? 0)) : "—"}</b></div></div><a href="/keranjang" className="mt-4 block text-center text-sm font-bold text-blue-700">Ubah pilihan buku</a><button className="mt-4 w-full rounded-xl bg-blue-700 py-3 font-bold text-white">Buat Pesanan</button>{message && <p className="mt-4 text-sm font-semibold text-blue-700">{message}</p>}</aside>
+      <aside className="h-fit rounded-3xl bg-white p-6 shadow-sm"><h2 className="font-black">Konfirmasi checkout</h2><p className="mt-2 text-sm leading-6 text-slate-500">{itemIds.length} item keranjang dipilih. Ongkir diperbarui sesuai lokasi.</p><div className="mt-5 space-y-3 rounded-xl bg-blue-50 p-4 text-sm"><div className="flex justify-between"><span>Subtotal belanja</span><b>{cart ? money(selectedSubtotal) : "Memuat…"}</b></div><div className="flex justify-between"><span>Ongkir</span><b>{selectedQuote ? money(selectedQuote.cost ?? selectedQuote.price ?? selectedQuote.final_price) : "—"}</b></div><div className="flex justify-between border-t border-blue-200 pt-3 text-base"><b>Total belanja</b><b className="text-blue-700">{cart ? money(selectedSubtotal + Number(selectedQuote?.cost ?? selectedQuote?.price ?? selectedQuote?.final_price ?? 0)) : "—"}</b></div></div><a href="/keranjang" className="mt-4 block text-center text-sm font-bold text-blue-700">Ubah pilihan buku</a>
+  <button name="method" value="midtrans" className="mt-4 w-full rounded-xl bg-blue-700 py-3 font-bold text-white shadow-sm hover:bg-blue-800 transition">💳 Buat Pesanan & Bayar Online</button>
+  <button name="method" value="wa" className="mt-2 w-full rounded-xl bg-green-600 py-3 font-bold text-white shadow-sm hover:bg-green-700 transition flex items-center justify-center gap-2">💬 Pesan lewat WhatsApp</button>
+{message && <p className="mt-4 text-sm font-semibold text-blue-700">{message}</p>}</aside>
     </form>
   </main>;
 }

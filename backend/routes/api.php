@@ -55,6 +55,7 @@ Route::post('/shipping/quote', ShippingQuoteController::class);
 Route::get('/shipping/areas', ShippingAreaController::class);
 Route::post('/checkout', [OrderController::class, 'store']);
 Route::post('/orders/{order}/whatsapp', [WhatsAppController::class, 'order']);
+Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel']);
 Route::prefix('account')->middleware('auth:sanctum')->group(function (): void { Route::get('/', [AccountController::class, 'dashboard']); Route::get('/orders', [AccountController::class, 'orders']); Route::post('/addresses', [AccountAddressController::class, 'store']); Route::put('/addresses/{address}', [AccountAddressController::class, 'update']); Route::delete('/addresses/{address}', [AccountAddressController::class, 'destroy']); });
 Route::prefix('account/wishlist')->middleware('auth:sanctum')->group(function (): void { Route::get('/', [WishlistController::class, 'index']); Route::post('/', [WishlistController::class, 'store']); Route::delete('/{wishlist}', [WishlistController::class, 'destroy']); });
 Route::prefix('admin/orders')->middleware('auth:sanctum')->group(function (): void { Route::get('/', [AdminOrderController::class, 'index'])->middleware('permission:order.view'); Route::get('/{order}', [AdminOrderController::class, 'show'])->middleware('permission:order.view'); Route::patch('/{order}/status', [AdminOrderController::class, 'updateStatus'])->middleware('permission:order.update'); });

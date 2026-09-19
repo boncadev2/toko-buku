@@ -44,6 +44,7 @@ function SearchContent() {
   const [user, setUser] = useState(null);
   const [accountOpen, setAccountOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [settings, setSettings] = useState(() => { try { return typeof window !== "undefined" ? JSON.parse(localStorage.getItem("app_settings") || "{}") : {}; } catch { return {}; } });
 
   // Fetch Session & Categories
   useEffect(() => {
@@ -57,6 +58,7 @@ function SearchContent() {
       setCartCount((p?.data?.items || []).reduce((sum, item) => sum + Number(item.quantity || 0), 0));
     }).catch(() => null);
 
+    fetch(`${apiUrl}/settings`).then(r => r.ok ? r.json() : null).then(p => ((d) => { localStorage.setItem("app_settings", JSON.stringify(typeof d === "function" ? d(settings) : d)); setSettings(d); })(p?.data || {}));
     fetch(`${apiUrl}/categories`).then(r => r.ok ? r.json() : null).then(p => {
       setCategories(p?.data || []);
     });
@@ -85,9 +87,11 @@ function SearchContent() {
   }, [query, category, sort, categories]);
 
   const logout = () => { localStorage.removeItem("token"); window.location.href = "/"; };
+  const appName = settings.app_name || "";
+  const appLogo = settings.app_logo;
 
   return <>
-    <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-[#fffdf8]/95 backdrop-blur"><div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-4"><a href="/" className="font-black text-xl">📚 bukupagi</a><input className="min-w-0 flex-1 rounded-full border bg-white px-4 py-2 outline-blue-700" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Cari judul, penulis, atau ISBN"/><a href="/keranjang" className="relative grid h-10 w-10 shrink-0 place-items-center rounded-full border border-blue-200 bg-white text-lg text-blue-700" aria-label="Keranjang belanja">🛒<span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-blue-700 px-1 text-[9px] font-black text-white">{cartCount}</span></a>{user ? <div className="relative"><button onClick={() => setAccountOpen(!accountOpen)} className="rounded-full border-2 border-blue-700 px-4 py-2 font-bold">{user.name} ⌄</button>{accountOpen && <div className="absolute right-0 top-12 z-50 w-44 rounded-xl bg-white p-2 shadow-xl"><a className="block rounded-lg p-2 hover:bg-blue-50" href="/akun">Akun Saya</a><a className="block rounded-lg p-2 hover:bg-blue-50" href="/akun/pesanan">Pesanan Saya</a><button onClick={logout} className="w-full rounded-lg p-2 text-left font-bold text-red-600 hover:bg-red-50">Keluar</button></div>}</div> : <><a href="/auth/login" className="font-bold hidden sm:block">Masuk</a><a href="/auth/register" className="rounded-full bg-slate-950 px-4 py-2 font-bold text-white">Daftar</a></>}</div></header>
+    <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-[#fffdf8]/95 backdrop-blur"><div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-4"><a href="/" className="flex items-center gap-2 font-black text-xl">{appLogo ? <img src={appLogo} alt={appName} className="h-8 w-8 rounded-lg object-contain" /> : <span className="grid h-8 w-8 place-items-center rounded-xl bg-blue-700 text-white">{(appName || " ")[0].toUpperCase()}</span>} {appName}</a><input className="min-w-0 flex-1 rounded-full border bg-white px-4 py-2 outline-blue-700" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Cari judul, penulis, atau ISBN"/><a href="/keranjang" className="relative grid h-10 w-10 shrink-0 place-items-center rounded-full border border-blue-200 bg-white text-lg text-blue-700" aria-label="Keranjang belanja">🛒<span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-blue-700 px-1 text-[9px] font-black text-white">{cartCount}</span></a>{user ? <div className="relative"><button onClick={() => setAccountOpen(!accountOpen)} className="rounded-full border-2 border-blue-700 px-4 py-2 font-bold">{user.name} ⌄</button>{accountOpen && <div className="absolute right-0 top-12 z-50 w-44 rounded-xl bg-white p-2 shadow-xl"><a className="block rounded-lg p-2 hover:bg-blue-50" href="/akun">Akun Saya</a><a className="block rounded-lg p-2 hover:bg-blue-50" href="/akun/pesanan">Pesanan Saya</a><button onClick={logout} className="w-full rounded-lg p-2 text-left font-bold text-red-600 hover:bg-red-50">Keluar</button></div>}</div> : <><a href="/auth/login" className="font-bold hidden sm:block">Masuk</a><a href="/auth/register" className="rounded-full bg-slate-950 px-4 py-2 font-bold text-white">Daftar</a></>}</div></header>
     <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 lg:grid-cols-[240px_1fr]">
       <aside className="h-fit rounded-2xl border border-stone-200 bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between"><b>Filter</b><button onClick={() => { setCategory("Semua"); setQuery(""); }} className="text-xs font-bold text-blue-700">Reset</button></div>
