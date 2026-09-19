@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration; use Illuminate\Database\Schema\Blueprint; use Illuminate\Support\Facades\Schema;
+return new class extends Migration { public function up(): void { Schema::create('shipments', function(Blueprint $t): void { $t->id(); $t->foreignId('order_id')->unique()->constrained()->cascadeOnDelete(); $t->string('provider')->nullable(); $t->string('courier')->nullable(); $t->string('service')->nullable(); $t->decimal('cost',15,2)->default(0); $t->string('tracking_number')->nullable()->unique(); $t->enum('status',['pending','packed','shipped','delivered'])->default('pending'); $t->json('snapshot')->nullable(); $t->timestamps(); }); } public function down(): void { Schema::dropIfExists('shipments'); } };

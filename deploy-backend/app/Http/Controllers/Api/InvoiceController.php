@@ -1,0 +1,4 @@
+<?php
+namespace App\Http\Controllers\Api;
+use App\Http\Controllers\Controller; use App\Models\Order; use Illuminate\Http\Request;
+class InvoiceController extends Controller { public function show(Request $r, Order $order) { if($order->user_id && $r->user('sanctum')?->id!==$order->user_id) abort(403); if(!$order->user_id && !hash_equals((string)$order->guest_token,(string)$r->header('X-Cart-Token'))) abort(403); return response()->json(['data'=>['invoice_number'=>'INV-'.$order->number,'order_number'=>$order->number,'status'=>$order->status,'customer'=>['name'=>$order->recipient_name,'phone'=>$order->phone,'address'=>$order->address_line_1.', '.$order->city.', '.$order->province.' '.$order->postal_code],'items'=>$order->items,'subtotal'=>$order->subtotal,'discount'=>$order->discount_total,'shipping'=>$order->shipping_total,'total'=>$order->grand_total]]); } }

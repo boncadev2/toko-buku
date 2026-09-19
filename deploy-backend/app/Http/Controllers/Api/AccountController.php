@@ -1,0 +1,4 @@
+<?php
+namespace App\Http\Controllers\Api;
+use App\Http\Controllers\Controller; use App\Models\Order; use Illuminate\Http\Request;
+class AccountController extends Controller { public function dashboard(Request $r) { $u=$r->user(); $orders=Order::where('user_id',$u->id)->latest()->get(); $active=$orders->whereIn('status',['pending_payment','paid','processing','packed','shipped'])->values(); return response()->json(['data'=>['user'=>['id'=>$u->id,'name'=>$u->name,'email'=>$u->email,'phone'=>$u->phone],'summary'=>['orders_count'=>$orders->count(),'active_orders_count'=>$active->count(),'total_spent'=>$orders->where('status','completed')->sum('grand_total')],'active_orders'=>$active->take(5),'recent_orders'=>$orders->take(10),'addresses'=>$u->addresses()->orderByDesc('is_default')->get()]]); } public function orders(Request $r) { return response()->json(['data'=>Order::where('user_id',$r->user()->id)->with('items')->latest()->paginate(10)]); } }
