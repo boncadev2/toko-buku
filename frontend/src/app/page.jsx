@@ -245,12 +245,14 @@ export default function Home() {
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [dbCategories, setDbCategories] = useState([]);
-  const [marketplace, setMarketplace] = useState(() => {
-    try { 
-      const c = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("app_settings") || "{}") : {};
-      return { store_address: "", hero_eyebrow: "", hero_title: "", hero_description: "", recommendation_label: "", recommendation_book_title: "", recommendation_book_subtitle: "", recommendation_kicker: "", recommendation_title: "", shopee_url: "", tokopedia_url: "", youtube_url: "", whatsapp_url: "", facebook_url: "", instagram_url: "", ...c };
-    } catch { return {}; }
-  });
+  const [marketplace, setMarketplace] = useState({ store_address: "", hero_eyebrow: "", hero_title: "", hero_description: "", recommendation_label: "", recommendation_book_title: "", recommendation_book_subtitle: "", recommendation_kicker: "", recommendation_title: "", shopee_url: "", tokopedia_url: "", youtube_url: "", whatsapp_url: "", facebook_url: "", instagram_url: "" });
+  
+  useEffect(() => {
+    try {
+      const c = JSON.parse(localStorage.getItem("app_settings") || "{}");
+      setMarketplace(prev => ({ ...prev, ...c }));
+    } catch {}
+  }, []);
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/health`).then(async (response) => { if (!response.ok) throw new Error("Health check failed"); return response.json(); }).then(({ data }) => setHealth(data)).catch(() => setHealthError(true));
     fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/categories`).then(r => r.ok ? r.json() : null).then(p => { if (p?.data) setDbCategories(p.data); }).catch(() => null);

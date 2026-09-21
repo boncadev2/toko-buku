@@ -17,7 +17,8 @@ export default function CustomerHeader({ user: suppliedUser = null, active = "" 
   const [fetchedUser, setFetchedUser] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [settings, setSettings] = useState(() => { try { return typeof window !== "undefined" ? JSON.parse(localStorage.getItem("app_settings") || "{}") : {}; } catch { return {}; } });
+  const [settings, setSettings] = useState({});
+  useEffect(() => { try { const c = JSON.parse(localStorage.getItem("app_settings") || "{}"); setSettings(prev => ({ ...prev, ...c })); } catch {} }, []);
   const [logoutOpen, setLogoutOpen] = useState(false);
 
   useEffect(() => {

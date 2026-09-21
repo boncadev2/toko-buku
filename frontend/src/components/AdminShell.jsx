@@ -22,13 +22,14 @@ export function adminHeaders() {
   return { Accept: "application/json", Authorization: `Bearer ${token}` };
 }
 
-export default function AdminShell({ title, description, children }) {
+export default function AdminShell({ title, description, children, headerRight }) {
   const pathname = usePathname();
   const [user, setUser] = useState(null);
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
-  const [site, setSite] = useState(() => { try { const c = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("app_settings") || "{}") : {}; return { app_name: "", app_logo: "", ...c }; } catch { return { app_name: "", app_logo: "" }; } });
+  const [site, setSite] = useState({ app_name: "", app_logo: "" });
+  useEffect(() => { try { const c = JSON.parse(localStorage.getItem("app_settings") || "{}"); setSite(prev => ({ ...prev, ...c })); } catch {} }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -58,7 +59,7 @@ export default function AdminShell({ title, description, children }) {
 
     <div className="mx-auto grid w-full max-w-[1440px] flex-1 gap-6 px-4 py-6 sm:px-5 lg:grid-cols-[240px_1fr]">
       <aside className="hidden h-fit rounded-3xl bg-slate-950 p-4 text-white shadow-xl lg:block"><p className="px-3 py-2 text-[10px] font-bold uppercase tracking-[.2em] text-slate-400">Operasional</p><nav className="space-y-1">{menu.map(([href, icon, label]) => <Link key={href} href={href} className={`block rounded-xl px-3 py-3 text-sm font-bold ${pathname === href ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-white/10"}`}>{icon} {label}</Link>)}</nav><Link href="/" className="mt-7 block rounded-xl border border-white/10 px-3 py-3 text-sm text-slate-300">← Lihat toko</Link></aside>
-      <section className="min-w-0"><div className="rounded-3xl bg-gradient-to-r from-blue-800 to-indigo-700 p-6 text-white shadow-lg sm:p-7"><p className="text-sm font-semibold text-blue-100">{site.app_name || ""} Admin</p><h1 className="mt-1 text-2xl font-black sm:text-3xl">{title}</h1><p className="mt-2 text-sm text-blue-100">{description}</p></div>{children}</section>
+      <section className="min-w-0"><div className="rounded-3xl bg-gradient-to-r from-blue-800 to-indigo-700 p-6 text-white shadow-lg sm:p-7 flex flex-col sm:flex-row justify-between sm:items-center gap-4"><div><p className="text-sm font-semibold text-blue-100">{site.app_name || ""} Admin</p><h1 className="mt-1 text-2xl font-black sm:text-3xl">{title}</h1><p className="mt-2 text-sm text-blue-100">{description}</p></div>{headerRight && <div>{headerRight}</div>}</div>{children}</section>
     </div>
 
     {logoutOpen && <div className="fixed inset-0 z-[100] grid place-items-center bg-slate-950/55 p-4 backdrop-blur-sm"><section role="dialog" aria-modal="true" aria-labelledby="logout-title" className="w-full max-w-sm rounded-3xl bg-white p-6 text-center shadow-2xl"><span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-red-50 text-2xl">↪</span><h2 id="logout-title" className="mt-5 text-xl font-black text-slate-900">Keluar dari akun?</h2><p className="mt-2 text-sm leading-6 text-slate-500">Sesi admin akan diakhiri dan Anda akan kembali ke halaman utama.</p><div className="mt-6 grid grid-cols-2 gap-3"><button onClick={() => setLogoutOpen(false)} className="rounded-xl border border-slate-200 px-4 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50">Batal</button><button onClick={confirmLogout} className="rounded-xl bg-red-600 px-4 py-3 text-sm font-bold text-white hover:bg-red-700">Ya, Keluar</button></div></section></div>}

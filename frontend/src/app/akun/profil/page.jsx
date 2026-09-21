@@ -20,7 +20,8 @@ export default function ProfilePage() {
   const headers = { Accept: "application/json", "Content-Type": "application/json", Authorization: `Bearer ${token}` };
 
   const load = async () => { const response = await fetch(`${apiUrl}/account`, { headers }); if (!response.ok) throw new Error(); const payload = await response.json(); setAccount(payload.data); };
-  const [settings, setSettings] = useState(() => { try { return typeof window !== "undefined" ? JSON.parse(localStorage.getItem("app_settings") || "{}") : {}; } catch { return {}; } });
+  const [settings, setSettings] = useState({});
+  useEffect(() => { try { const c = JSON.parse(localStorage.getItem("app_settings") || "{}"); setSettings(prev => ({ ...prev, ...c })); } catch {} }, []);
   const appName = settings.app_name || "";
   const appLogo = settings.app_logo;
   useEffect(() => { if (!token) { window.location.href = "/auth/login"; return; } load().catch(() => setMessage("Profil belum dapat dimuat.")); }, []);

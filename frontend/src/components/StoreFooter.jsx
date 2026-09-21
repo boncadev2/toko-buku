@@ -7,7 +7,8 @@ import StoreMobileControls from "./StoreMobileControls";
 export default function StoreFooter() {
   const [user, setUser] = useState(null);
   const [cartCount, setCartCount] = useState(0);
-  const [settings, setSettings] = useState(() => { try { const c = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("app_settings") || "{}") : {}; return { store_address: "", ...c }; } catch { return { store_address: "" }; } });
+  const [settings, setSettings] = useState({ store_address: "" });
+  useEffect(() => { try { const c = JSON.parse(localStorage.getItem("app_settings") || "{}"); setSettings(prev => ({ ...prev, ...c })); } catch {} }, []);
 
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api";

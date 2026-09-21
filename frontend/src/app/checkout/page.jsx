@@ -74,7 +74,7 @@ export default function CheckoutPage() {
   }, []);
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) return;
+    if (!localStorage.getItem("token")) { window.location.href = "/auth/login?redirect=/checkout"; return; }
     Promise.all([fetch(`${apiUrl}/auth/me`, { headers: authHeaders() }).then((r) => r.json()), fetch(`${apiUrl}/account`, { headers: authHeaders() }).then((r) => r.json())]).then(([me, account]) => {
       setUser(me.data); const saved = account.data?.addresses || []; setAddresses(saved);
       const preferred = saved.find((address) => address.is_default) || saved[0];

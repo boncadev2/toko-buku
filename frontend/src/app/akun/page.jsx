@@ -16,7 +16,8 @@ export default function AccountPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
 
-  const [settings, setSettings] = useState(() => { try { return typeof window !== "undefined" ? JSON.parse(localStorage.getItem("app_settings") || "{}") : {}; } catch { return {}; } });
+  const [settings, setSettings] = useState({});
+  useEffect(() => { try { const c = JSON.parse(localStorage.getItem("app_settings") || "{}"); setSettings(prev => ({ ...prev, ...c })); } catch {} }, []);
   const appName = settings.app_name || "";
   const appLogo = settings.app_logo;
   useEffect(() => {

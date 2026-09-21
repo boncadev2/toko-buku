@@ -44,7 +44,8 @@ function SearchContent() {
   const [user, setUser] = useState(null);
   const [accountOpen, setAccountOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
-  const [settings, setSettings] = useState(() => { try { return typeof window !== "undefined" ? JSON.parse(localStorage.getItem("app_settings") || "{}") : {}; } catch { return {}; } });
+  const [settings, setSettings] = useState({});
+  useEffect(() => { try { const c = JSON.parse(localStorage.getItem("app_settings") || "{}"); setSettings(prev => ({ ...prev, ...c })); } catch {} }, []);
 
   // Fetch Session & Categories
   useEffect(() => {

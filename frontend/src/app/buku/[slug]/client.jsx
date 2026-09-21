@@ -46,7 +46,8 @@ export default function BookDetailPage({ params }) {
   const [cartCount, setCartCount] = useState(0); 
   const [notice, setNotice] = useState("");
   const [relatedBooks, setRelatedBooks] = useState([]);
-  const [settings, setSettings] = useState(() => { try { return typeof window !== "undefined" ? JSON.parse(localStorage.getItem("app_settings") || "{}") : {}; } catch { return {}; } }); 
+  const [settings, setSettings] = useState({});
+  useEffect(() => { try { const c = JSON.parse(localStorage.getItem("app_settings") || "{}"); setSettings(prev => ({ ...prev, ...c })); } catch {} }, []); 
   
   const cartHeaders = () => { 
     const token = localStorage.getItem("token"), guest = localStorage.getItem("cart_token"); 

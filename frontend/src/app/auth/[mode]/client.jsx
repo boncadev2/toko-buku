@@ -18,7 +18,9 @@ export default function AuthPage({ params }) {
     try {
       const data = await api(`/auth/${login ? "login" : "register"}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(login ? { login: form.get("login"), password: form.get("password") } : { name: form.get("name"), email: form.get("email"), password: form.get("password"), password_confirmation: form.get("password") }) });
       localStorage.setItem("token", data.data.token);
-      router.push(data.data.user?.is_admin ? "/admin" : "/akun");
+      const redirectParams = new URLSearchParams(window.location.search);
+      const redirectTo = redirectParams.get("redirect") || (data.data.user?.is_admin ? "/admin" : "/akun");
+      router.push(redirectTo);
     } catch (error) {
       if (error.status === 429) setMessage("Terlalu banyak percobaan masuk. Tunggu sebentar lalu coba kembali.");
       else if (error.status === 422) setMessage(error.data?.errors?.login?.[0] || Object.values(error.data?.errors || {}).flat()[0] || "Data yang dimasukkan belum valid.");
