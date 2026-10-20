@@ -289,7 +289,7 @@ export default function InfoModal({ open, tab = "tentang", onClose, onTabChange,
 
         {/* Footer Modal */}
         <div className="border-t border-stone-100 bg-[#fffdf8] px-6 py-3.5 flex items-center justify-between">
-          <span className="text-[11px] text-stone-500">© 2026 {appName || "Toko Buku"}</span>
+          <span className="text-[11px] text-stone-500">© 2026</span>
           <button
             type="button"
             onClick={onClose}
