@@ -8,6 +8,7 @@ import AdminShell, { adminHeaders, ErrorBox, Loading } from "../../../components
 const defaults = {
   app_name: "", app_logo: "", store_address: "",
   hero_image: "",
+  show_recommendation: "1",
   hero_eyebrow: "Rumah bagi gagasan yang layak berumur panjang",
   hero_title: "Dari Gagasan Menjadi Karya Abadi",
   hero_description: "Penerbitan buku untuk setiap ide, cerita, pemikiran yang layak dibaca lebih lama.",
@@ -20,10 +21,13 @@ const defaults = {
   shopee_url: "", tokopedia_url: "", youtube_url: "", whatsapp_url: "", facebook_url: "", instagram_url: "",
 };
 
-const heroFields = [
+const mainHeroFields = [
   ["hero_eyebrow", "Label Hero", "Teks kecil di atas judul utama."],
   ["hero_title", "Judul Utama Landing Page", "Judul besar yang pertama dilihat pelanggan."],
   ["hero_description", "Deskripsi Landing Page", "Paragraf penjelas di bawah judul utama."],
+];
+
+const recommendationFields = [
   ["recommendation_label", "Label Kartu Rekomendasi", "Contoh: Rekomendasi hari ini."],
   ["recommendation_book_title", "Judul Buku Rekomendasi", "Nama buku pada sampul rekomendasi."],
   ["recommendation_book_subtitle", "Subjudul Buku Rekomendasi", "Teks pendek di bawah judul buku."],
@@ -154,7 +158,58 @@ export default function SettingsPage() {
         </div>
 
         <div className="grid gap-5 md:grid-cols-2">
-          {heroFields.map(([key, label, help]) => <TextField key={key} label={label} help={help} value={form[key]} onChange={(value) => change(key, value)} textarea={key === "hero_description" || key === "recommendation_title"}/>)}
+          {mainHeroFields.map(([key, label, help]) => (
+            <TextField
+              key={key}
+              label={label}
+              help={help}
+              value={form[key]}
+              onChange={(value) => change(key, value)}
+              textarea={key === "hero_description"}
+            />
+          ))}
+        </div>
+
+        {/* Setting Hide / Show Kartu Rekomendasi */}
+        <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50/80 p-5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <p className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                <span>Kartu Rekomendasi Hari Ini</span>
+                <span className={`inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-bold ${form.show_recommendation !== "0" ? "bg-emerald-100 text-emerald-800" : "bg-slate-200 text-slate-600"}`}>
+                  {form.show_recommendation !== "0" ? "Tampil (Visible)" : "Disembunyikan (Hidden)"}
+                </span>
+              </p>
+              <p className="text-xs text-slate-500 mt-1">
+                Aktifkan sakelar ini untuk menampilkan kartu rekomendasi di sisi kanan hero, atau matikan untuk menyembunyikannya (*hide*).
+              </p>
+            </div>
+            <label className="relative inline-flex cursor-pointer items-center shrink-0">
+              <input
+                type="checkbox"
+                checked={form.show_recommendation !== "0" && form.show_recommendation !== false}
+                onChange={(e) => change("show_recommendation", e.target.checked ? "1" : "0")}
+                className="peer sr-only"
+              />
+              <div className="peer h-7 w-12 rounded-full bg-slate-300 after:absolute after:left-[3px] after:top-[3px] after:h-5.5 after:w-5.5 after:rounded-full after:border after:border-slate-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-5 peer-checked:after:border-white peer-focus:outline-none shadow-inner" />
+            </label>
+          </div>
+
+          <div className={`mt-5 pt-5 border-t border-slate-200 transition-opacity duration-200 ${form.show_recommendation === "0" ? "opacity-50" : "opacity-100"}`}>
+            <p className="text-xs font-bold text-slate-700 mb-3">Konten Kartu Rekomendasi</p>
+            <div className="grid gap-5 md:grid-cols-2">
+              {recommendationFields.map(([key, label, help]) => (
+                <TextField
+                  key={key}
+                  label={label}
+                  help={help}
+                  value={form[key]}
+                  onChange={(value) => change(key, value)}
+                  textarea={key === "recommendation_title"}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </Card>
 
