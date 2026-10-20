@@ -7,6 +7,7 @@ import AdminShell, { adminHeaders, ErrorBox, Loading } from "../../../components
 
 const defaults = {
   app_name: "", app_logo: "", store_address: "",
+  hero_image: "",
   hero_eyebrow: "Temukan cerita berikutnya",
   hero_title: "Buku yang baik, selalu menemukan pembacanya.",
   hero_description: "Pilihan buku untuk menemani rasa ingin tahu, ide besar, dan waktu tenangmu di rumah.",
@@ -42,6 +43,8 @@ export default function SettingsPage() {
   const [form, setForm] = useState(null);
   const [logo, setLogo] = useState(null);
   const [preview, setPreview] = useState("");
+  const [heroImage, setHeroImage] = useState(null);
+  const [heroPreview, setHeroPreview] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [saving, setSaving] = useState(false);
@@ -49,7 +52,9 @@ export default function SettingsPage() {
   useEffect(() => {
     api("/settings").then((response) => {
       const values = Object.fromEntries(Object.entries({ ...defaults, ...response.data }).map(([key, value]) => [key, value ?? ""]));
-      setForm(values); setPreview(values.app_logo || "");
+      setForm(values);
+      setPreview(values.app_logo || "");
+      setHeroPreview(values.hero_image || "/hero.jpg");
     }).catch(() => setError("Pengaturan tidak dapat dimuat."));
   }, []);
 
@@ -57,17 +62,29 @@ export default function SettingsPage() {
   const save = async (event) => {
     event.preventDefault(); setSaving(true); setError(""); setNotice("");
     const body = new FormData();
-    Object.keys(defaults).filter((key) => key !== "app_logo").forEach((key, index) => {
+    Object.keys(defaults).filter((key) => key !== "app_logo" && key !== "hero_image").forEach((key, index) => {
       body.append(`settings[${index}][key]`, key);
       body.append(`settings[${index}][value]`, form[key] || "");
       body.append(`settings[${index}][is_secret]`, "0");
     });
     if (logo) body.append("logo", logo);
+    if (heroImage) body.append("hero_image", heroImage);
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/admin/settings`, { method: "POST", headers: adminHeaders(), body });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(Object.values(payload.errors || {}).flat().join(" ") || payload.message || "Pengaturan gagal disimpan.");
-      setForm((old) => ({ ...old, ...payload.data })); setPreview(payload.data?.app_logo || preview); setLogo(null);
+      setForm((old) => ({ ...old, ...payload.data }));
+      setPreview(payload.data?.app_logo || preview);
+      setHeroPreview(payload.data?.hero_image || heroPreview);
+      setLogo(null);
+      setHeroImage(null);
+      if (payload.data) {
+        try {
+          const currentSettings = JSON.parse(localStorage.getItem("app_settings") || "{}");
+          localStorage.setItem("app_settings", JSON.stringify({ ...currentSettings, ...payload.data }));
+          window.dispatchEvent(new Event("storage"));
+        } catch {}
+      }
       setNotice("Pengaturan berhasil disimpan dan sudah aktif pada halaman publik.");
     } catch (saveError) { setError(saveError.message); }
     finally { setSaving(false); }
@@ -77,9 +94,69 @@ export default function SettingsPage() {
 
   return <AdminShell title="Pengaturan" description="Kelola identitas, landing page, dan informasi toko.">
     <form onSubmit={save} className="mt-6 space-y-6">
-      <Card title="Identitas Aplikasi" description="Nama dan logo utama yang ditampilkan pada aplikasi."><div className="grid gap-5 md:grid-cols-[1fr_260px]"><TextField label="Nama aplikasi" value={form.app_name} onChange={(value) => change("app_name", value)} required/><div><p className="text-xs font-bold text-slate-600">Logo aplikasi</p><div className="mt-2 flex items-center gap-4">{preview ? <img src={preview} alt="Logo aplikasi" className="h-20 w-20 rounded-2xl border object-contain p-2"/> : <span className="grid h-20 w-20 place-items-center rounded-2xl bg-blue-700 text-3xl text-white">{(form.app_name || " ")[0].toUpperCase()}</span>}<input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={(event) => { const file = event.target.files?.[0] || null; setLogo(file); if (file) setPreview(URL.createObjectURL(file)); }} className="min-w-0 text-xs"/></div><small className="mt-2 block text-slate-400">PNG, JPG, WebP, atau SVG. Maksimal 2 MB.</small></div></div></Card>
+      <Card title="Identitas Aplikasi" description="Nama dan logo utama yang ditampilkan pada aplikasi.">
+        <div className="grid gap-5 md:grid-cols-[1fr_320px]">
+          <TextField label="Nama aplikasi" value={form.app_name} onChange={(value) => change("app_name", value)} required/>
+          <div>
+            <p className="text-xs font-bold text-slate-600">Logo aplikasi</p>
+            <div className="mt-2 flex items-center gap-4">
+              {preview ? (
+                <img src={preview} alt="Logo aplikasi" className="h-20 w-20 rounded-2xl border bg-slate-50 object-contain p-2 shadow-sm"/>
+              ) : (
+                <span className="grid h-20 w-20 place-items-center rounded-2xl bg-blue-700 text-3xl font-black text-white">{(form.app_name || " ")[0].toUpperCase()}</span>
+              )}
+              <div className="min-w-0 flex-1 space-y-1.5">
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0] || null;
+                    setLogo(file);
+                    if (file) setPreview(URL.createObjectURL(file));
+                  }}
+                  className="input file:mr-3 file:rounded-lg file:border-0 file:bg-blue-50 file:px-3 file:py-2 file:font-bold file:text-blue-700"
+                />
+                <small className="block text-[11px] text-slate-400">PNG, JPG, WebP, atau SVG. Maksimal 5 MB.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
 
-      <Card title="Hero" description="Atur teks utama dan kartu rekomendasi pada bagian atas landing page."><div className="grid gap-5 md:grid-cols-2">{heroFields.map(([key, label, help]) => <TextField key={key} label={label} help={help} value={form[key]} onChange={(value) => change(key, value)} textarea={key === "hero_description" || key === "recommendation_title"}/>)}</div></Card>
+      <Card title="Hero" description="Atur gambar, teks utama, dan kartu rekomendasi pada bagian atas landing page.">
+        <div className="mb-6 rounded-2xl border border-blue-100 bg-blue-50/40 p-5">
+          <p className="text-xs font-bold text-slate-700">Gambar Hero Landing Page</p>
+          <p className="mt-1 text-xs text-slate-500">Gambar ilustrasi atau foto buku yang ditampilkan di sebelah kanan teks utama hero.</p>
+          <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center">
+            {heroPreview ? (
+              <div className="relative aspect-[16/10] w-full max-w-[260px] overflow-hidden rounded-2xl border bg-white shadow-sm">
+                <img src={heroPreview} alt="Preview Gambar Hero" className="h-full w-full object-cover"/>
+              </div>
+            ) : (
+              <div className="grid aspect-[16/10] w-full max-w-[260px] place-items-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 text-xs font-bold text-slate-400">
+                Belum ada gambar
+              </div>
+            )}
+            <div className="min-w-0 flex-1 space-y-2">
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={(event) => {
+                  const file = event.target.files?.[0] || null;
+                  setHeroImage(file);
+                  if (file) setHeroPreview(URL.createObjectURL(file));
+                }}
+                className="input file:mr-3 file:rounded-lg file:border-0 file:bg-blue-50 file:px-3 file:py-2 file:font-bold file:text-blue-700"
+              />
+              <small className="block text-[11px] text-slate-400">Format: JPG, PNG, atau WebP. Rekomendasi rasio 4:3 atau 16:10. Maksimal 5 MB.</small>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-2">
+          {heroFields.map(([key, label, help]) => <TextField key={key} label={label} help={help} value={form[key]} onChange={(value) => change(key, value)} textarea={key === "hero_description" || key === "recommendation_title"}/>)}
+        </div>
+      </Card>
 
       <Card title="Tautan Marketplace" description="URL untuk floating button Pesan Cepat."><div className="grid gap-5 md:grid-cols-2"><TextField label="Link toko Shopee" type="url" value={form.shopee_url} onChange={(value) => change("shopee_url", value)} placeholder="https://shopee.co.id/nama-toko"/><TextField label="Link toko Tokopedia" type="url" value={form.tokopedia_url} onChange={(value) => change("tokopedia_url", value)} placeholder="https://www.tokopedia.com/nama-toko"/></div></Card>
 

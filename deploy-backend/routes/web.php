@@ -23,3 +23,20 @@ Route::get('/clear-cache', function () {
     \Illuminate\Support\Facades\Artisan::call('optimize:clear');
     return "Cache berhasil dibersihkan!";
 });
+
+Route::get('/media/{path}', function ($path) {
+    $filePath = storage_path('app/public/' . $path);
+    if (!file_exists($filePath)) {
+        abort(404);
+    }
+    return response()->file($filePath);
+})->where('path', '.*');
+
+Route::get('/storage/{path}', function ($path) {
+    $filePath = storage_path('app/public/' . $path);
+    if (!file_exists($filePath)) {
+        abort(404);
+    }
+    return response()->file($filePath);
+})->where('path', '.*');
+

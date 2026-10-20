@@ -29,7 +29,14 @@ export default function AdminShell({ title, description, children, headerRight }
   const [profileOpen, setProfileOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [site, setSite] = useState({ app_name: "", app_logo: "" });
-  useEffect(() => { try { const c = JSON.parse(localStorage.getItem("app_settings") || "{}"); setSite(prev => ({ ...prev, ...c })); } catch {} }, []);
+  useEffect(() => {
+    const sync = () => {
+      try { const c = JSON.parse(localStorage.getItem("app_settings") || "{}"); setSite(prev => ({ ...prev, ...c })); } catch {}
+    };
+    sync();
+    window.addEventListener("storage", sync);
+    return () => window.removeEventListener("storage", sync);
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
