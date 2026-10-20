@@ -8,9 +8,9 @@ import AdminShell, { adminHeaders, ErrorBox, Loading } from "../../../components
 const defaults = {
   app_name: "", app_logo: "", store_address: "",
   hero_image: "",
-  hero_eyebrow: "Temukan cerita berikutnya",
-  hero_title: "Buku yang baik, selalu menemukan pembacanya.",
-  hero_description: "Pilihan buku untuk menemani rasa ingin tahu, ide besar, dan waktu tenangmu di rumah.",
+  hero_eyebrow: "Rumah bagi gagasan yang layak berumur panjang",
+  hero_title: "Dari Gagasan Menjadi Karya Abadi",
+  hero_description: "Penerbitan buku untuk setiap ide, cerita, pemikiran yang layak dibaca lebih lama.",
   recommendation_label: "Rekomendasi hari ini",
   recommendation_book_title: "Jendela Masa Depan",
   recommendation_book_subtitle: "sebuah cerita untuk pulang",

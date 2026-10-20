@@ -245,7 +245,24 @@ export default function Home() {
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [dbCategories, setDbCategories] = useState([]);
-  const [marketplace, setMarketplace] = useState({ store_address: "", hero_image: "", hero_eyebrow: "", hero_title: "", hero_description: "", recommendation_label: "", recommendation_book_title: "", recommendation_book_subtitle: "", recommendation_kicker: "", recommendation_title: "", shopee_url: "", tokopedia_url: "", youtube_url: "", whatsapp_url: "", facebook_url: "", instagram_url: "" });
+  const [marketplace, setMarketplace] = useState({
+    store_address: "",
+    hero_image: "",
+    hero_eyebrow: "Rumah bagi gagasan yang layak berumur panjang",
+    hero_title: "Dari Gagasan Menjadi Karya Abadi",
+    hero_description: "Penerbitan buku untuk setiap ide, cerita, pemikiran yang layak dibaca lebih lama.",
+    recommendation_label: "Rekomendasi hari ini",
+    recommendation_book_title: "Jendela Masa Depan",
+    recommendation_book_subtitle: "sebuah cerita untuk pulang",
+    recommendation_kicker: "Baca, bayangkan, tumbuh.",
+    recommendation_title: "Satu halaman bisa mengubah harimu.",
+    shopee_url: "",
+    tokopedia_url: "",
+    youtube_url: "",
+    whatsapp_url: "",
+    facebook_url: "",
+    instagram_url: "",
+  });
   
   useEffect(() => {
     try {
@@ -295,36 +312,94 @@ export default function Home() {
   return <main className="min-h-screen bg-[#fffdf8] text-stone-900">
     <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-[#fffdf8]/95 backdrop-blur"><div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8"><Link href="/" className="flex shrink-0 items-center gap-2 font-black">{logoEl}<span className="text-xl">{appName}</span></Link><nav className="hidden items-center gap-6 text-sm font-semibold text-stone-600 lg:flex"><Link href="#kategori" className="hover:text-stone-900">Kategori</Link><Link href="#terbaru" className="hover:text-stone-900">Buku Baru</Link><Link href="#promo" className="hover:text-stone-900">Promo</Link></nav><form onSubmit={(e) => { e.preventDefault(); const q = new FormData(e.currentTarget).get("q")?.toString().trim(); router.push(`/cari${q ? `?q=${encodeURIComponent(q)}` : ""}`); }} className="hidden max-w-sm flex-1 items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm text-stone-400 shadow-sm lg:flex">⌕<input name="q" className="w-full bg-transparent outline-none" placeholder="Cari judul, penulis, atau ISBN" /></form><div className="hidden items-center gap-3 lg:flex"><Link href="/keranjang" className="relative grid h-10 w-10 place-items-center rounded-full border border-blue-200 bg-white text-lg text-blue-700">🛒<span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-blue-700 px-1 text-[9px] font-black text-white">{cartCount}</span></Link>{authLoading ? <div className="h-9 w-24 animate-pulse rounded-full bg-stone-200"></div> : user ? <div className="relative"><button onClick={() => setAccountOpen(!accountOpen)} className="flex items-center gap-2 rounded-full border-2 border-blue-700 bg-white py-1.5 pl-2 pr-3 text-sm font-bold text-slate-700"><span className="grid h-8 w-8 place-items-center rounded-full bg-blue-600 text-white">{user.name?.slice(0, 1).toUpperCase()}</span><span className="max-w-28 truncate">{user.name}</span><span>⌄</span></button>{accountOpen && <div className="absolute right-0 top-12 z-50 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl"><a href={user.is_admin ? "/admin" : "/akun"} className="block rounded-xl px-3 py-3 text-sm font-semibold hover:bg-blue-50">👤 {user.is_admin ? "Dashboard Admin" : "Akun Saya"}</a>{!user.is_admin && <a href="/akun/pesanan" className="block rounded-xl px-3 py-3 text-sm font-semibold hover:bg-blue-50">📦 Pesanan Saya</a>}<button onClick={() => { setAccountOpen(false); setLogoutOpen(true); }} className="w-full rounded-xl px-3 py-3 text-left text-sm font-bold text-red-600 hover:bg-red-50">↪ Keluar</button></div>}</div> : <><Link href="/auth/login" className="text-sm font-bold text-stone-700">Masuk</Link><Link href="/auth/register" className="rounded-full bg-slate-950 px-4 py-2 text-sm font-bold text-white">Daftar</Link></>}</div></div></header>
     <StoreMobileControls user={user} cartCount={cartCount} onLogout={() => { setAccountOpen(false); setLogoutOpen(true); }} />
-    <section id="beranda" className="border-b border-stone-200 bg-[radial-gradient(circle_at_80%_10%,#fed7aa,transparent_32%),radial-gradient(circle_at_5%_90%,#fde68a,transparent_28%)]"><div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.1fr_.9fr] lg:px-8 lg:py-24"><div><p className="inline-flex rounded-full bg-orange-100 px-3 py-1 text-xs font-bold uppercase tracking-[.18em] text-orange-800">{marketplace.hero_eyebrow || "Temukan cerita berikutnya"}</p><h1 className="mt-5 max-w-2xl text-4xl font-black leading-[1.04] tracking-tight text-stone-950 sm:text-6xl">{marketplace.hero_title || "Buku yang baik, selalu menemukan pembacanya."}</h1><p className="mt-5 max-w-xl text-base leading-7 text-stone-600 sm:text-lg">{marketplace.hero_description || "Pilihan buku untuk menemani rasa ingin tahu, ide besar, dan waktu tenangmu di rumah."}</p><form className="mt-8 flex max-w-xl gap-2 rounded-2xl border border-stone-200 bg-white p-2 shadow-lg shadow-orange-950/5" onSubmit={(event) => { event.preventDefault(); const q = new FormData(event.currentTarget).get("q")?.toString().trim(); router.push( `/cari${q ? `?q=${encodeURIComponent(q)}` : ""}`); }}><input name="q" className="min-w-0 flex-1 px-3 text-sm outline-none" placeholder="Mau membaca apa hari ini?" aria-label="Cari koleksi buku" /><button className="shrink-0 rounded-xl bg-orange-700 px-4 py-3 text-sm font-bold text-white">Cari buku</button></form><div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-stone-600"><span>✓ Pilihan kurasi</span><span>✓ Promo mingguan</span><span>✓ Pengiriman ke seluruh Indonesia</span></div>
-        </div>
-        <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
-          {heroImage ? (
-            <div className="group relative overflow-hidden rounded-[2.5rem] border border-orange-200/70 bg-white/70 p-3 shadow-2xl shadow-orange-950/10 backdrop-blur transition hover:shadow-orange-950/20">
-              <div className="relative aspect-[16/11] w-full overflow-hidden rounded-[2rem] bg-stone-100">
-                <img
-                  src={heroImage}
-                  alt={marketplace.hero_title || "Hero banner"}
-                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                />
+    <section id="beranda" className="relative w-full border-b border-stone-200 overflow-hidden bg-[#faf6ee]">
+      <div className="absolute inset-0 z-0">
+        <img
+          src={heroImage}
+          alt={marketplace.hero_title || "Hero banner"}
+          className="h-full w-full object-cover object-[center_right] sm:object-right"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#fffdf8] via-[#fffdf8]/90 sm:via-[#fffdf8]/80 to-transparent lg:max-w-2xl" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#fffdf8]/70 via-transparent to-transparent sm:hidden" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-10 sm:py-14 lg:px-8 lg:py-16">
+        <div className="grid items-center gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="max-w-xl">
+            <p className="inline-flex rounded-full bg-orange-100/90 px-3 py-0.5 text-[11px] sm:text-xs font-bold uppercase tracking-[.18em] text-orange-900 backdrop-blur-sm shadow-sm border border-orange-200/50">
+              {marketplace.hero_eyebrow || "Rumah bagi gagasan yang layak berumur panjang"}
+            </p>
+            <h1 className="mt-3.5 sm:mt-4 text-2xl font-black leading-tight tracking-tight text-stone-950 sm:text-4xl lg:text-[2.75rem] lg:leading-[1.12] drop-shadow-sm">
+              {marketplace.hero_title || "Dari Gagasan Menjadi Karya Abadi"}
+            </h1>
+            <p className="mt-3 max-w-lg text-sm sm:text-base leading-relaxed text-stone-700 font-medium">
+              {marketplace.hero_description || "Penerbitan buku untuk setiap ide, cerita, pemikiran yang layak dibaca lebih lama."}
+            </p>
+            <form
+              className="mt-5 sm:mt-6 flex max-w-lg gap-2 rounded-xl border border-stone-200/80 bg-white/95 p-1.5 shadow-lg shadow-orange-950/5 backdrop-blur"
+              onSubmit={(event) => {
+                event.preventDefault();
+                const q = new FormData(event.currentTarget).get("q")?.toString().trim();
+                router.push(`/cari${q ? `?q=${encodeURIComponent(q)}` : ""}`);
+              }}
+            >
+              <input
+                name="q"
+                className="min-w-0 flex-1 px-3 text-sm outline-none bg-transparent"
+                placeholder="Mau membaca apa hari ini?"
+                aria-label="Cari koleksi buku"
+              />
+              <button className="shrink-0 rounded-lg bg-orange-700 hover:bg-orange-800 transition px-4 py-2 sm:px-5 sm:py-2.5 text-sm font-bold text-white shadow-md">
+                Cari buku
+              </button>
+            </form>
+            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 text-xs sm:text-sm font-semibold text-stone-700">
+              <span className="flex items-center gap-1.5"><span className="text-orange-700 font-bold">✓</span> Pilihan kurasi</span>
+              <span className="flex items-center gap-1.5"><span className="text-orange-700 font-bold">✓</span> Promo mingguan</span>
+              <span className="flex items-center gap-1.5"><span className="text-orange-700 font-bold">✓</span> Pengiriman ke seluruh Indonesia</span>
+            </div>
+          </div>
+
+          {/* Kartu Rekomendasi Hari Ini (Tinggi Ditambah & Proporsional) */}
+          <div className="flex justify-start lg:justify-end">
+            <div className="w-full max-w-sm rounded-3xl border border-white/30 bg-stone-950/85 p-5 sm:p-6 shadow-2xl shadow-stone-950/20 backdrop-blur-md transition hover:bg-stone-950/90">
+              <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-3">
+                <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[.22em] text-orange-300">
+                  {marketplace.recommendation_label || "Rekomendasi hari ini"}
+                </p>
+                <span className="inline-flex rounded-full bg-orange-500/20 px-2.5 py-0.5 text-[9px] font-bold text-orange-200">
+                  Pilihan editor
+                </span>
+              </div>
+              <div className="mt-4 flex items-center gap-4 sm:gap-5">
+                <div className="w-24 sm:w-28 aspect-[3/4] shrink-0 rounded-xl bg-gradient-to-br from-orange-400 via-red-600 to-stone-950 p-3 text-white shadow-xl flex flex-col justify-between">
+                  <p className="text-[8px] font-bold uppercase tracking-[.18em] text-white/70">Novel pilihan</p>
+                  <p className="whitespace-pre-line text-sm sm:text-base font-black leading-tight">
+                    {marketplace.recommendation_book_title || "Jendela Masa Depan"}
+                  </p>
+                  <p className="text-[9px] text-white/80 truncate">
+                    {marketplace.recommendation_book_subtitle || "sebuah cerita untuk pulang"}
+                  </p>
+                </div>
+                <div className="min-w-0 flex-1 space-y-2">
+                  <p className="text-xs text-stone-300 font-medium">
+                    {marketplace.recommendation_kicker || "Baca, bayangkan, tumbuh."}
+                  </p>
+                  <h3 className="text-base sm:text-lg font-black leading-snug text-white">
+                    {marketplace.recommendation_title || "Satu halaman bisa mengubah harimu."}
+                  </h3>
+                  <div className="pt-1">
+                    <a
+                      href="#terbaru"
+                      className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-xs font-bold text-stone-950 hover:bg-orange-100 transition shadow-sm"
+                    >
+                      Mulai jelajahi →
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
-          ) : (
-            <div className="relative rounded-[2rem] bg-stone-950 p-6 shadow-2xl sm:p-8">
-              <p className="text-xs font-bold uppercase tracking-[.25em] text-orange-300">{marketplace.recommendation_label || "Rekomendasi hari ini"}</p>
-              <div className="mt-7 grid grid-cols-[.8fr_1.2fr] items-end gap-5">
-                <div className="aspect-[3/4] rounded-lg bg-gradient-to-br from-orange-300 via-red-600 to-stone-950 p-4 text-white shadow-xl">
-                  <p className="text-[9px] font-bold uppercase tracking-[.2em] text-white/70">Novel pilihan</p>
-                  <p className="mt-5 whitespace-pre-line text-xl font-black leading-none">{marketplace.recommendation_book_title || "Jendela Masa Depan"}</p>
-                  <p className="mt-8 text-xs">{marketplace.recommendation_book_subtitle || "sebuah cerita untuk pulang"}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-stone-400">{marketplace.recommendation_kicker || "Baca, bayangkan, tumbuh."}</p>
-                  <h2 className="mt-2 text-3xl font-black leading-tight text-white">{marketplace.recommendation_title || "Satu halaman bisa mengubah harimu."}</h2>
-                  <a href="#terbaru" className="mt-5 inline-flex rounded-full bg-white px-4 py-2 text-sm font-bold text-stone-950">Mulai jelajahi →</a>
-                </div>
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </section>
