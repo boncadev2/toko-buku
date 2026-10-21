@@ -1,4 +1,5 @@
 import "./globals.css";
+import DynamicFavicon from "../components/DynamicFavicon";
 
 export async function generateMetadata() {
   const siteUrl = (
@@ -105,6 +106,15 @@ export async function generateMetadata() {
       description: appDescription,
       images: [appLogo],
     },
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/icon.png", type: "image/png" },
+      ],
+      apple: [
+        { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+      ],
+    },
     alternates: {
       canonical: "/",
     },
@@ -159,7 +169,10 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <DynamicFavicon />
+        {children}
+      </body>
     </html>
   );
 }
