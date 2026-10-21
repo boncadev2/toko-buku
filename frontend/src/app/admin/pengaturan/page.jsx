@@ -20,6 +20,7 @@ const defaults = {
   recommendation_title: "Satu halaman bisa mengubah harimu.",
   about_us: "", shopping_guide: "", shipping_info: "", contact_us: "",
   shopee_url: "", tokopedia_url: "", youtube_url: "", whatsapp_url: "", facebook_url: "", instagram_url: "",
+  meta_title: "", meta_description: "", meta_keywords: "", google_site_verification: "",
 };
 
 const mainHeroFields = [
@@ -237,6 +238,40 @@ export default function SettingsPage() {
               ))}
             </div>
           </div>
+        </div>
+      </Card>
+
+      <Card title="Optimasi Mesin Pencari (SEO & Google)" description="Pengaturan untuk meningkatkan posisi toko di pencarian Google dan verifikasi Google Search Console.">
+        <div className="grid gap-5">
+          <TextField
+            label="Judul SEO Website (Meta Title)"
+            value={form.meta_title}
+            onChange={(value) => change("meta_title", value)}
+            placeholder="Toko Buku Online Terlengkap & Original"
+            help="Judul yang muncul di tab peramban dan hasil pencarian Google. Jika kosong, akan menggunakan nama aplikasi."
+          />
+          <TextField
+            label="Deskripsi SEO Website (Meta Description)"
+            value={form.meta_description}
+            onChange={(value) => change("meta_description", value)}
+            placeholder="Toko buku online terlengkap dengan koleksi novel, pengembangan diri, dan promo diskon spesial setiap minggu."
+            textarea
+            help="Ringkasan penjelasan toko buku Anda yang dibaca oleh Google saat menampilkan hasil pencarian (disarankan 120-160 karakter)."
+          />
+          <TextField
+            label="Kata Kunci (Keywords)"
+            value={form.meta_keywords}
+            onChange={(value) => change("meta_keywords", value)}
+            placeholder="toko buku, buku online, novel murah, beli buku original"
+            help="Kata kunci utama yang relevan dengan toko buku Anda, dipisahkan dengan tanda koma."
+          />
+          <TextField
+            label="Kode Verifikasi Google Search Console (google-site-verification)"
+            value={form.google_site_verification}
+            onChange={(value) => change("google_site_verification", value)}
+            placeholder="contoh: google-site-verification=abc123xyz... atau kode tokennya"
+            help="Tempel kode verifikasi HTML tag dari Google Search Console di sini untuk membuktikan kepemilikan website kepada Google."
+          />
         </div>
       </Card>
 
