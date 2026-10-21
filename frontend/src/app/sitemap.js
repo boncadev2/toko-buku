@@ -1,5 +1,4 @@
-export const dynamic = "force-dynamic";
-export const revalidate = 3600; // perbarui setiap 1 jam
+export const dynamic = "force-static";
 
 export default async function sitemap() {
   const base = (
@@ -27,10 +26,9 @@ export default async function sitemap() {
   let bookEntries = [];
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 4000);
+    const timeout = setTimeout(() => controller.abort(), 3000);
     const res = await fetch(`${apiUrl}/books?per_page=1000`, {
       signal: controller.signal,
-      next: { revalidate: 3600 },
       headers: { Accept: "application/json" },
     });
     clearTimeout(timeout);

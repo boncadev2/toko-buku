@@ -1,7 +1,5 @@
 import "./globals.css";
 
-export const dynamic = "force-dynamic";
-
 export async function generateMetadata() {
   const siteUrl = (
     process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
@@ -22,7 +20,6 @@ export async function generateMetadata() {
     const timer = setTimeout(() => controller.abort(), 2000);
     const res = await fetch(`${apiUrl}/settings`, {
       signal: controller.signal,
-      next: { revalidate: 60 },
       headers: { Accept: "application/json" },
     });
     clearTimeout(timer);

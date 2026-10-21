@@ -1,7 +1,5 @@
 import ClientPage from "./client";
 
-export const dynamic = "force-dynamic";
-
 export async function generateStaticParams() {
   try {
     const apiUrl = (
@@ -32,7 +30,6 @@ async function getBook(slug) {
       process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"
     ).replace(/\/$/, "");
     const res = await fetch(`${apiUrl}/books/${slug}`, {
-      next: { revalidate: 60 },
       headers: { Accept: "application/json" },
     });
     if (!res.ok) return null;
