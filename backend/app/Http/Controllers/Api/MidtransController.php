@@ -1,7 +1,14 @@
 <?php
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller; use App\Models\Order; use App\Models\Payment; use App\Services\Payment\MidtransPaymentGateway; use Illuminate\Http\Request;
-class MidtransController extends Controller { public function __construct(private readonly MidtransPaymentGateway $gateway) {} public function create(Request $r,Order $order) { if($order->user_id&&$r->user('sanctum')?->id!==$order->user_id) abort(403); abort_unless(in_array($order->status, ['pending_payment', 'manual_payment']), 400, 'Pesanan ini tidak dapat dibayar lagi.');
+class MidtransController extends Controller { public function __construct(private readonly MidtransPaymentGateway $gateway) {} public function create(Request $r,Order $order) {
+    if ($order->user_id) {
+        abort_unless($r->user('sanctum')?->id === $order->user_id, 403, 'Akses tidak diizinkan.');
+    } else {
+        $token = $r->header('X-Cart-Token');
+        abort_unless($token && hash_equals((string) $order->guest_token, (string) $token), 403, 'Akses tidak diizinkan.');
+    }
+    abort_unless(in_array($order->status, ['pending_payment', 'manual_payment']), 400, 'Pesanan ini tidak dapat dibayar lagi.');
         $result=$this->gateway->create($order); $payment=Payment::firstOrCreate(['reference'=>$result['reference']],['order_id'=>$order->id,'provider'=>'midtrans','status'=>'pending','amount'=>$order->grand_total,'payload'=>[]]); return response()->json(['data'=>['payment_id'=>$payment->id,'token'=>$result['token'],'redirect_url'=>$result['redirect_url']]]); }
 
              public function callback(Request $r) {

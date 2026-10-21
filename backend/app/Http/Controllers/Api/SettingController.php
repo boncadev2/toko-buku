@@ -60,7 +60,7 @@ class SettingController extends Controller
             'settings.*.key' => ['required', 'string', 'max:100'],
             'settings.*.value' => ['nullable', 'string'],
             'settings.*.is_secret' => ['nullable', 'boolean'],
-            'logo' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:5120'],
+            'logo' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'hero_image' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
 
@@ -79,7 +79,7 @@ class SettingController extends Controller
             Setting::updateOrCreate(['key' => 'app_logo_path'], ['value' => $path, 'is_secret' => false]);
             Setting::updateOrCreate(['key' => 'app_logo'], ['value' => $logoUrl, 'is_secret' => false]);
 
-            if ($oldPath && $oldPath !== $path) {
+            if ($oldPath && $oldPath !== $path && str_starts_with($oldPath, 'settings/') && !str_contains($oldPath, '..')) {
                 Storage::disk('public')->delete($oldPath);
             }
         }
@@ -92,7 +92,7 @@ class SettingController extends Controller
             Setting::updateOrCreate(['key' => 'hero_image_path'], ['value' => $path, 'is_secret' => false]);
             Setting::updateOrCreate(['key' => 'hero_image'], ['value' => $heroUrl, 'is_secret' => false]);
 
-            if ($oldPath && $oldPath !== $path && $oldPath !== 'hero/default-hero.jpg') {
+            if ($oldPath && $oldPath !== $path && $oldPath !== 'hero/default-hero.jpg' && str_starts_with($oldPath, 'hero/') && !str_contains($oldPath, '..')) {
                 Storage::disk('public')->delete($oldPath);
             }
         }

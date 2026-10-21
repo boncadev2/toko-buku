@@ -5,7 +5,7 @@
 import { useEffect, useState } from "react";
 import MarketplaceFloatingButtons from "./MarketplaceFloatingButtons";
 
-export default function StoreMobileControls({ user, cartCount = 0, onLogout }) {
+export default function StoreMobileControls({ user, cartCount = 0, onLogout, settings = null }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export default function StoreMobileControls({ user, cartCount = 0, onLogout }) {
 
   return (
     <>
-      <MarketplaceFloatingButtons cartCount={cartCount} showCart />
+      <MarketplaceFloatingButtons cartCount={cartCount} showCart settings={settings} />
       <div className="lg:hidden">
         <button onClick={() => setOpen(!open)} className="fixed right-4 top-4 z-50 grid h-10 w-10 place-items-center rounded-xl border border-stone-200 bg-[#fffdf8] text-xl shadow-sm" aria-label="Buka menu">☰</button>
         {open && (

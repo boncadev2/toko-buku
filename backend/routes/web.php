@@ -6,37 +6,33 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route sementara untuk setup di Shared Hosting tanpa Terminal
-Route::get('/setup-database', function () {
-    try {
-        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
-            '--seed' => true,
-            '--force' => true
-        ]);
-        return "Database berhasil dibuat dan diisi data (Migration & Seeder Sukses)!";
-    } catch (\Exception $e) {
-        return "Terjadi Kesalahan: " . $e->getMessage();
-    }
-});
-
-Route::get('/clear-cache', function () {
-    \Illuminate\Support\Facades\Artisan::call('optimize:clear');
-    return "Cache berhasil dibersihkan!";
-});
-
-Route::get('/media/{path}', function ($path) {
-    $filePath = storage_path('app/public/' . $path);
-    if (!file_exists($filePath)) {
+// Handler aman untuk file publik storage dengan perlindungan Path Traversal (LFI)
+$serveStorageFile = function (string $path) {
+    // Normalisasi direktori dasar public storage
+    $baseDir = realpath(storage_path('app/public'));
+    if (!$baseDir) {
         abort(404);
     }
-    return response()->file($filePath);
-})->where('path', '.*');
 
-Route::get('/storage/{path}', function ($path) {
-    $filePath = storage_path('app/public/' . $path);
-    if (!file_exists($filePath)) {
+    // Hindari file tersembunyi / dotfiles (e.g. .env, .htaccess)
+    if (str_contains($path, '/.') || str_starts_with($path, '.')) {
         abort(404);
     }
-    return response()->file($filePath);
-})->where('path', '.*');
 
+    $targetPath = storage_path('app/public/' . $path);
+    $realPath = realpath($targetPath);
+
+    // Wajib ada dan wajib berada di dalam base directory
+    if (!$realPath || !str_starts_with($realPath, $baseDir . DIRECTORY_SEPARATOR)) {
+        abort(404);
+    }
+
+    if (!is_file($realPath)) {
+        abort(404);
+    }
+
+    return response()->file($realPath);
+};
+
+Route::get('/media/{path}', $serveStorageFile)->where('path', '.*');
+Route::get('/storage/{path}', $serveStorageFile)->where('path', '.*');

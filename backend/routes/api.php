@@ -50,12 +50,12 @@ Route::prefix('cart')->group(function (): void {
     Route::delete('/items/{item}', [CartController::class, 'destroy']);
 });
 
-Route::post('/checkout/preview', CheckoutPreviewController::class);
-Route::post('/shipping/quote', ShippingQuoteController::class);
-Route::get('/shipping/areas', ShippingAreaController::class);
-Route::post('/checkout', [OrderController::class, 'store']);
-Route::post('/orders/{order}/whatsapp', [WhatsAppController::class, 'order']);
-Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel']);
+Route::post('/checkout/preview', CheckoutPreviewController::class)->middleware('throttle:checkout');
+Route::post('/shipping/quote', ShippingQuoteController::class)->middleware('throttle:shipping-quote');
+Route::get('/shipping/areas', ShippingAreaController::class)->middleware('throttle:60,1');
+Route::post('/checkout', [OrderController::class, 'store'])->middleware('throttle:checkout');
+Route::post('/orders/{order}/whatsapp', [WhatsAppController::class, 'order'])->middleware('throttle:20,1');
+Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->middleware('throttle:20,1');
 Route::prefix('account')->middleware('auth:sanctum')->group(function (): void { Route::get('/', [AccountController::class, 'dashboard']); Route::get('/orders', [AccountController::class, 'orders']); Route::post('/addresses', [AccountAddressController::class, 'store']); Route::put('/addresses/{address}', [AccountAddressController::class, 'update']); Route::delete('/addresses/{address}', [AccountAddressController::class, 'destroy']); });
 Route::prefix('account/wishlist')->middleware('auth:sanctum')->group(function (): void { Route::get('/', [WishlistController::class, 'index']); Route::post('/', [WishlistController::class, 'store']); Route::delete('/{wishlist}', [WishlistController::class, 'destroy']); });
 Route::prefix('admin/orders')->middleware('auth:sanctum')->group(function (): void { Route::get('/', [AdminOrderController::class, 'index'])->middleware('permission:order.view'); Route::get('/{order}', [AdminOrderController::class, 'show'])->middleware('permission:order.view'); Route::patch('/{order}/status', [AdminOrderController::class, 'updateStatus'])->middleware('permission:order.update'); });
@@ -75,8 +75,8 @@ Route::get('/books/{book:slug}', [PublicCatalogController::class, 'show']);
 Route::get('/categories', [PublicCatalogController::class, 'categories']);
 Route::get('/categories/{category:slug}/books', [PublicCatalogController::class, 'categoryBooks']);
 Route::get('/search', [PublicCatalogController::class, 'books']);
-Route::post('/orders/{order}/payment/midtrans', [MidtransController::class, 'create']);
-Route::post('/payments/midtrans/callback', [MidtransController::class, 'callback']);
+Route::post('/orders/{order}/payment/midtrans', [MidtransController::class, 'create'])->middleware('throttle:20,1');
+Route::post('/payments/midtrans/callback', [MidtransController::class, 'callback'])->middleware('throttle:120,1');
 
 Route::prefix('admin/books')->middleware('auth:sanctum')->group(function (): void {
     Route::get('/', [AdminBookController::class, 'index'])->middleware('permission:catalog.view');

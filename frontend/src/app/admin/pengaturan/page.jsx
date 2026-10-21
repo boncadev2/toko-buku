@@ -7,6 +7,7 @@ import AdminShell, { adminHeaders, ErrorBox, Loading } from "../../../components
 
 const defaults = {
   app_name: "", app_logo: "", store_address: "",
+  show_app_name_desktop: "1",
   hero_image: "",
   show_recommendation: "1",
   hero_eyebrow: "Rumah bagi gagasan yang layak berumur panjang",
@@ -124,6 +125,32 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="mt-6 pt-5 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <label htmlFor="show_app_name_desktop" className="text-xs font-bold text-slate-800 cursor-pointer">
+                Nama Aplikasi Mode Desktop
+              </label>
+              <span className={`inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-bold ${form.show_app_name_desktop !== "0" ? "bg-emerald-100 text-emerald-800" : "bg-slate-200 text-slate-600"}`}>
+                {form.show_app_name_desktop !== "0" ? "Tampil (Visible)" : "Disembunyikan (Hidden)"}
+              </span>
+            </div>
+            <p className="mt-0.5 text-xs text-slate-500">
+              Sembunyikan atau tampilkan teks nama aplikasi di samping logo pada layar komputer/desktop (pada mode HP otomatis disembunyikan).
+            </p>
+          </div>
+          <label className="relative inline-flex items-center cursor-pointer shrink-0">
+            <input
+              type="checkbox"
+              id="show_app_name_desktop"
+              checked={form.show_app_name_desktop !== "0" && form.show_app_name_desktop !== false}
+              onChange={(e) => change("show_app_name_desktop", e.target.checked ? "1" : "0")}
+              className="sr-only peer"
+            />
+            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+          </label>
         </div>
       </Card>
 
