@@ -1,5 +1,4 @@
 import "./globals.css";
-import DynamicFavicon from "../components/DynamicFavicon";
 
 export async function generateMetadata() {
   const siteUrl = (
@@ -169,10 +168,7 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
       </head>
-      <body className="min-h-full flex flex-col">
-        <DynamicFavicon />
-        {children}
-      </body>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }
