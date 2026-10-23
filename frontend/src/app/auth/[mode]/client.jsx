@@ -22,9 +22,24 @@ export default function AuthPage({ params }) {
       const redirectTo = redirectParams.get("redirect") || (data.data.user?.is_admin ? "/admin" : "/akun");
       router.push(redirectTo);
     } catch (error) {
-      if (error.status === 429) setMessage("Terlalu banyak percobaan masuk. Tunggu sebentar lalu coba kembali.");
-      else if (error.status === 422) setMessage(error.data?.errors?.login?.[0] || Object.values(error.data?.errors || {}).flat()[0] || "Data yang dimasukkan belum valid.");
-      else setMessage("Layanan login belum dapat dihubungi. Silakan coba kembali.");
+      if (error.status === 429) {
+        setMessage("Terlalu banyak percobaan masuk. Tunggu sebentar lalu coba kembali.");
+      } else if (error.status === 422) {
+        setMessage(
+          error.data?.errors?.login?.[0] ||
+          error.data?.errors?.email?.[0] ||
+          error.data?.errors?.password?.[0] ||
+          Object.values(error.data?.errors || {}).flat()[0] ||
+          error.data?.message ||
+          "Data yang dimasukkan belum valid."
+        );
+      } else if (error.status === 401) {
+        setMessage(error.data?.message || "Email / nomor telepon atau kata sandi tidak cocok.");
+      } else if (error.data?.message) {
+        setMessage(error.data.message);
+      } else {
+        setMessage("Layanan backend (http://localhost:8080) belum dapat dihubungi. Pastikan server backend / Docker sudah dijalankan.");
+      }
     } finally { setLoading(false); }
   };
 
