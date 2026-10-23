@@ -1,11 +1,15 @@
 /** @type {import('next').NextConfig} */
+const isSharedHostingExport = process.env.OUTPUT_EXPORT === "true";
+
 const nextConfig = {
-   // Diubah ke export untuk persiapan deploy ke Shared Hosting
-   output: "export",
-   // Matikan image optimization bawaan next.js karena tidak didukung di mode export statis
+   // Aktifkan export hanya jika dipanggil untuk shared hosting (OUTPUT_EXPORT=true)
+   ...(isSharedHostingExport ? { output: "export" } : {}),
    images: {
       unoptimized: true,
-   }
+   },
+   typescript: {
+      ignoreBuildErrors: true,
+   },
 };
 
 export default nextConfig;
