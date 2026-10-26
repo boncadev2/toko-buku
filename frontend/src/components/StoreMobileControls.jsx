@@ -5,7 +5,7 @@
 import { useEffect, useState } from "react";
 import MarketplaceFloatingButtons from "./MarketplaceFloatingButtons";
 
-export default function StoreMobileControls({ user, cartCount = 0, onLogout, settings = null }) {
+export default function StoreMobileControls({ user, cartCount = 0, onLogout, settings = null, onOpenInfo = null }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -25,9 +25,8 @@ export default function StoreMobileControls({ user, cartCount = 0, onLogout, set
           <div className="fixed left-0 right-0 top-[73px] z-50 border-t border-stone-200 bg-[#fffdf8] px-4 py-4 shadow-xl">
             <nav className="grid gap-3 text-sm font-bold text-stone-700">
               <a href="/">Beranda</a>
-              <a href="/#kategori">Kategori</a>
-              <a href="/#terbaru">Buku Baru</a>
-              <a href="/#promo">Promo</a>
+              <a href="/info/penerbitan" onClick={(e) => { if (onOpenInfo) { e.preventDefault(); setOpen(false); onOpenInfo("penerbitan"); } }}>Penerbitan</a>
+              <a href="/info/tentang" onClick={(e) => { if (onOpenInfo) { e.preventDefault(); setOpen(false); onOpenInfo("tentang"); } }}>Tentang Kami</a>
               <div className="my-1 border-t border-stone-200" />
               {user ? (
                 <>

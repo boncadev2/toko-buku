@@ -18,7 +18,7 @@ const defaults = {
   recommendation_book_subtitle: "sebuah cerita untuk pulang",
   recommendation_kicker: "Baca, bayangkan, tumbuh.",
   recommendation_title: "Satu halaman bisa mengubah harimu.",
-  about_us: "", shopping_guide: "", shipping_info: "", contact_us: "",
+  about_us: "", publishing_info: "", shopping_guide: "", shipping_info: "", contact_us: "",
   shopee_url: "", tokopedia_url: "", youtube_url: "", whatsapp_url: "", facebook_url: "", instagram_url: "",
   meta_title: "", meta_description: "", meta_keywords: "", google_site_verification: "",
 };
@@ -40,6 +40,7 @@ const recommendationFields = [
 const informationFields = [
   ["store_address", "Alamat Toko", "Alamat lengkap yang ditampilkan pada footer."],
   ["about_us", "Tentang Kami", "Profil, visi, dan nilai toko."],
+  ["publishing_info", "Layanan Penerbitan", "Informasi layanan penerbitan naskah, cetak, dan kerja sama."],
   ["shopping_guide", "Cara Belanja", "Langkah pelanggan melakukan pembelian."],
   ["shipping_info", "Pengiriman", "Informasi kurir, estimasi, dan ketentuan pengiriman."],
   ["contact_us", "Hubungi Kami", "Layanan pelanggan, WhatsApp, email, dan jam operasional."],

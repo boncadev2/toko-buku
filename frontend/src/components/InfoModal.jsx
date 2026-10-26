@@ -25,6 +25,53 @@ const tabMeta = {
       </div>
     ),
   },
+  penerbitan: {
+    title: "Layanan Penerbitan",
+    icon: "✍️",
+    key: "publishing_info",
+    badge: "Terbitkan Bukumu",
+    fallback: (appName, address, settings) => (
+      <div className="space-y-4 text-sm leading-7 text-slate-600">
+        <p>
+          Ingin menerbitkan buku impian Anda? <strong className="text-slate-900">{appName || "Kami"}</strong> menyediakan layanan penerbitan lengkap dan profesional bagi penulis independen, akademisi, komunitas, maupun organisasi.
+        </p>
+        <div className="grid gap-3 sm:grid-cols-2 pt-1">
+          <div className="rounded-2xl border border-orange-100 bg-orange-50/50 p-4">
+            <p className="font-bold text-slate-900">📝 Kurasi &amp; Editorial</p>
+            <p className="mt-1 text-xs text-slate-600 leading-relaxed">Proofreading, penyelarasan tata bahasa, dan kurasi naskah agar karya Anda berbobot dan nyaman dibaca.</p>
+          </div>
+          <div className="rounded-2xl border border-orange-100 bg-orange-50/50 p-4">
+            <p className="font-bold text-slate-900">🎨 Desain Sampul &amp; Layout</p>
+            <p className="mt-1 text-xs text-slate-600 leading-relaxed">Desain visual sampul memikat serta tata letak isi buku yang rapi, elegan, dan proporsional.</p>
+          </div>
+          <div className="rounded-2xl border border-orange-100 bg-orange-50/50 p-4">
+            <p className="font-bold text-slate-900">🔖 Legalitas &amp; ISBN Resmi</p>
+            <p className="mt-1 text-xs text-slate-600 leading-relaxed">Pengurusan ISBN resmi Perpustakaan Nasional RI dan barcode penerbitan untuk legalitas karya Anda.</p>
+          </div>
+          <div className="rounded-2xl border border-orange-100 bg-orange-50/50 p-4">
+            <p className="font-bold text-slate-900">🖨️ Percetakan &amp; Distribusi</p>
+            <p className="mt-1 text-xs text-slate-600 leading-relaxed">Pilihan cetak print-on-demand maupun cetak massal, dengan kesempatan distribusi di katalog toko.</p>
+          </div>
+        </div>
+        {settings?.whatsapp_url && (
+          <div className="mt-3 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div>
+              <p className="font-bold text-emerald-950">Konsultasi Naskah Anda</p>
+              <p className="text-xs text-emerald-800 mt-0.5">Diskusikan naskah dan rencana penerbitan bersama tim redaksi kami.</p>
+            </div>
+            <a
+              href={settings.whatsapp_url}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow hover:bg-emerald-700 transition shrink-0"
+            >
+              Kirim Naskah via WA ➔
+            </a>
+          </div>
+        )}
+      </div>
+    ),
+  },
   "cara-belanja": {
     title: "Cara Belanja",
     icon: "🛒",
@@ -257,13 +304,13 @@ export default function InfoModal({ open, tab = "tentang", onClose, onTabChange,
               <div className="whitespace-pre-line text-sm sm:text-base leading-relaxed text-slate-700">
                 {customContent}
               </div>
-              {currentTab === "kontak" && settings.whatsapp_url && (
+              {(currentTab === "kontak" || currentTab === "penerbitan") && settings.whatsapp_url && (
                 <div className="mt-4 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                   <div>
                     <p className="font-bold text-emerald-950 flex items-center gap-1.5">
-                      <span>WhatsApp Customer Care</span>
+                      <span>{currentTab === "penerbitan" ? "Konsultasi Penerbitan" : "WhatsApp Customer Care"}</span>
                     </p>
-                    <p className="text-xs text-emerald-800 mt-0.5">Respon cepat setiap Senin – Sabtu (09.00 – 17.00 WIB)</p>
+                    <p className="text-xs text-emerald-800 mt-0.5">{currentTab === "penerbitan" ? "Diskusikan naskah dan rencana penerbitan bersama tim redaksi" : "Respon cepat setiap Senin – Sabtu (09.00 – 17.00 WIB)"}</p>
                   </div>
                   <a
                     href={settings.whatsapp_url}
@@ -271,7 +318,7 @@ export default function InfoModal({ open, tab = "tentang", onClose, onTabChange,
                     rel="noreferrer"
                     className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow hover:bg-emerald-700 transition"
                   >
-                    Chat WhatsApp ➔
+                    {currentTab === "penerbitan" ? "Kirim Naskah via WA ➔" : "Chat WhatsApp ➔"}
                   </a>
                 </div>
               )}
