@@ -16,6 +16,12 @@ export default async function sitemap() {
       priority: 1.0,
     },
     {
+      url: `${base}/penerbitan`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
       url: `${base}/cari`,
       lastModified: new Date(),
       changeFrequency: "daily",
