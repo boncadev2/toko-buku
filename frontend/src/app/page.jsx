@@ -30,10 +30,6 @@ const shelves = [
   ] },
 ];
 
-const discounts = [
-  ["Cantik Itu Luka", "Eka Kurniawan", "Rp78.000", "from-fuchsia-800 to-pink-400", "-29%", "Rp110.000"], ["Bumi Manusia", "Pramoedya A. Toer", "Rp72.000", "from-amber-900 to-yellow-500", "-24%", "Rp95.000"], ["Sebuah Seni untuk Bersikap Bodo Amat", "Mark Manson", "Rp85.000", "from-lime-700 to-emerald-500", "-29%", "Rp120.000"], ["The Midnight Library", "Matt Haig", "Rp91.000", "from-blue-950 to-indigo-500", "-30%", "Rp130.000"],
-];
-
 function BookCard({ book, appName = "" }) {
   const [title, author, price, cover, label, originalPrice] = book;
   const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -301,7 +297,7 @@ export default function Home() {
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/categories`).then(r => r.ok ? r.json() : null).then(p => { if (p?.data) setDbCategories(p.data); }).catch(() => null);
     fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/settings`, { headers: { Accept: "application/json" } }).then((response) => response.ok ? response.json() : null).then((payload) => { if (payload?.data) localStorage.setItem("app_settings", JSON.stringify(payload.data)); setMarketplace((old) => ({ ...old, ...(payload?.data || {}) })); }).catch(() => null);
-    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=promo&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setPromoBooks(payload.data)).catch(() => null);
+    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=promo&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => setPromoBooks(payload?.data || [])).catch(() => setPromoBooks([]));
     fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=newest&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setLatestBooks(payload.data)).catch(() => null);
     fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=bestseller&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setBestsellerBooks(payload.data)).catch(() => null);
   }, []);
@@ -437,10 +433,30 @@ export default function Home() {
     
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"><section id="kategori" className="scroll-mt-24 py-12 sm:py-16"><div className="mb-7"><p className="text-xs font-bold uppercase tracking-[.2em] text-orange-700">Telusuri minatmu</p><h2 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Kategori pilihan</h2></div><CategorySlider categories={dbCategories} categoryColors={categoryColors} /></section>{shelves.map((shelf) => <Shelf shelf={shelf} key={shelf.id} appName={appName} dynamicBooks={shelf.id === "terbaru" ? latestBooks : shelf.id === "terlaris" ? bestsellerBooks : null} />)}</div>
     
-    <section id="promo" className="scroll-mt-24 bg-stone-950 py-12 text-white sm:py-16"><div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"><div className="mb-7 flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-orange-300">Harga terbaik</p><h2 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Diskon pilihan</h2><p className="mt-2 text-sm text-stone-300">Buku bagus, alasan lebih banyak untuk membaca.</p></div><Link href="/cari?sort=promo" className="rounded-full border border-orange-400/50 px-4 py-2 text-sm font-bold text-orange-200 hover:bg-orange-900/50 transition cursor-pointer">Promo terbatas ➔</Link></div><div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-5">{promoBooks && promoBooks.length > 0 ? promoBooks.map((book) => <DynamicBookCard book={book} key={book.id} />) : discounts.map((book) => <BookCard book={book} key={book[0]} />)}</div></div></section>
+    {promoBooks && promoBooks.length > 0 && (
+      <section id="promo" className="scroll-mt-24 bg-stone-950 py-12 text-white sm:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[.2em] text-orange-300">Harga terbaik</p>
+              <h2 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Diskon pilihan</h2>
+              <p className="mt-2 text-sm text-stone-300">Buku bagus, alasan lebih banyak untuk membaca.</p>
+            </div>
+            <Link href="/cari?sort=promo" className="rounded-full border border-orange-400/50 px-4 py-2 text-sm font-bold text-orange-200 hover:bg-orange-900/50 transition cursor-pointer">
+              Promo terbatas ➔
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-5">
+            {promoBooks.map((book) => (
+              <DynamicBookCard book={book} key={book.id} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
     
     <section className="border-b border-stone-200 bg-orange-100"><div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-5 px-4 py-10 sm:px-6 md:flex-row md:items-center lg:px-8"><div><p className="text-xl font-black text-stone-950">Jangan sampai kehabisan cerita bagus.</p><p className="mt-1 text-sm text-stone-600">Dapatkan kabar koleksi dan promo pilihan setiap minggu.</p></div><form className="flex w-full max-w-md gap-2" onSubmit={(event) => event.preventDefault()}><input className="min-w-0 flex-1 rounded-xl border border-orange-200 bg-white px-4 py-3 text-sm outline-none" type="email" placeholder="Email kamu" aria-label="Email kamu" /><button className="rounded-xl bg-stone-950 px-4 py-3 text-sm font-bold text-white">Berlangganan</button></form></div></section>
-    <footer><div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-[1.5fr_1fr_1fr] lg:px-8"><div><div className="flex items-center font-black text-stone-950">{appLogo ? <img src={appLogo} alt="" className="h-10 sm:h-11 w-auto max-w-[180px] rounded-lg object-contain" /> : <span className="grid h-10 w-10 place-items-center rounded-lg bg-orange-700 text-sm text-white">{(appName || " ")[0].toUpperCase()}</span>}</div><p className="mt-4 max-w-sm whitespace-pre-line text-sm leading-6 text-stone-600">{marketplace.store_address || "Alamat toko belum diatur."}</p><SocialLinks settings={marketplace}/></div><div><h2 className="font-bold">Jelajahi</h2><div className="mt-4 grid gap-3 text-sm text-stone-600"><a href="#kategori">Kategori</a><a href="#terbaru">Buku baru</a><a href="#terlaris">Terlaris</a><a href="#promo">Promo</a></div></div><div><h2 className="font-bold">Bantuan</h2><div className="mt-4 grid gap-3 text-sm text-stone-600"><button type="button" onClick={() => setInfoModal({ open: true, tab: "tentang" })} className="text-left hover:text-stone-950 transition cursor-pointer">Tentang kami</button><Link href="/penerbitan" className="text-left hover:text-stone-950 transition cursor-pointer">Layanan penerbitan</Link><button type="button" onClick={() => setInfoModal({ open: true, tab: "cara-belanja" })} className="text-left hover:text-stone-950 transition cursor-pointer">Cara belanja</button><button type="button" onClick={() => setInfoModal({ open: true, tab: "pengiriman" })} className="text-left hover:text-stone-950 transition cursor-pointer">Pengiriman</button><button type="button" onClick={() => setInfoModal({ open: true, tab: "kontak" })} className="text-left hover:text-stone-950 transition cursor-pointer">Hubungi kami</button></div></div></div><div className="border-t border-stone-200"><p className="mx-auto max-w-7xl px-4 py-5 text-xs text-stone-500 sm:px-6 lg:px-8">© 2026. Dibuat untuk pembaca yang selalu ingin tahu.</p></div></footer>
+    <footer><div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-[1.5fr_1fr_1fr] lg:px-8"><div><div className="flex items-center font-black text-stone-950">{appLogo ? <img src={appLogo} alt="" className="h-10 sm:h-11 w-auto max-w-[180px] rounded-lg object-contain" /> : <span className="grid h-10 w-10 place-items-center rounded-lg bg-orange-700 text-sm text-white">{(appName || " ")[0].toUpperCase()}</span>}</div><p className="mt-4 max-w-sm whitespace-pre-line text-sm leading-6 text-stone-600">{marketplace.store_address || "Alamat toko belum diatur."}</p><SocialLinks settings={marketplace}/></div><div><h2 className="font-bold">Jelajahi</h2><div className="mt-4 grid gap-3 text-sm text-stone-600"><a href="#kategori">Kategori</a><a href="#terbaru">Buku baru</a><a href="#terlaris">Terlaris</a><Link href="/cari?sort=promo">Promo</Link></div></div><div><h2 className="font-bold">Bantuan</h2><div className="mt-4 grid gap-3 text-sm text-stone-600"><button type="button" onClick={() => setInfoModal({ open: true, tab: "tentang" })} className="text-left hover:text-stone-950 transition cursor-pointer">Tentang kami</button><Link href="/penerbitan" className="text-left hover:text-stone-950 transition cursor-pointer">Layanan penerbitan</Link><button type="button" onClick={() => setInfoModal({ open: true, tab: "cara-belanja" })} className="text-left hover:text-stone-950 transition cursor-pointer">Cara belanja</button><button type="button" onClick={() => setInfoModal({ open: true, tab: "pengiriman" })} className="text-left hover:text-stone-950 transition cursor-pointer">Pengiriman</button><button type="button" onClick={() => setInfoModal({ open: true, tab: "kontak" })} className="text-left hover:text-stone-950 transition cursor-pointer">Hubungi kami</button></div></div></div><div className="border-t border-stone-200"><p className="mx-auto max-w-7xl px-4 py-5 text-xs text-stone-500 sm:px-6 lg:px-8">© 2026. Dibuat untuk pembaca yang selalu ingin tahu.</p></div></footer>
     <LogoutConfirmModal open={logoutOpen} onCancel={() => setLogoutOpen(false)} onConfirm={confirmLogout}/>
     <InfoModal open={infoModal.open} tab={infoModal.tab} onClose={() => setInfoModal(prev => ({ ...prev, open: false }))} onTabChange={(tab) => setInfoModal({ open: true, tab })} settings={marketplace} />
   </main>;
