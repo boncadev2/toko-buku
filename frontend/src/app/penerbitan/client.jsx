@@ -118,6 +118,7 @@ export default function PenerbitanClient() {
     store_address: "",
     show_app_name_desktop: "1",
     hero_image: "",
+    gramedia_url: "",
     shopee_url: "",
     tokopedia_url: "",
     youtube_url: "",

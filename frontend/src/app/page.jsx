@@ -283,6 +283,7 @@ export default function Home() {
     recommendation_book_subtitle: "sebuah cerita untuk pulang",
     recommendation_kicker: "Baca, bayangkan, tumbuh.",
     recommendation_title: "Satu halaman bisa mengubah harimu.",
+    gramedia_url: "",
     shopee_url: "",
     tokopedia_url: "",
     youtube_url: "",

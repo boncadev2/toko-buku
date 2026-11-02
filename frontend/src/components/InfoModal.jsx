@@ -138,10 +138,20 @@ const tabMeta = {
           </div>
         )}
 
-        {(settings.shopee_url || settings.tokopedia_url) && (
+        {(settings.gramedia_url || settings.shopee_url || settings.tokopedia_url) && (
           <div className="pt-2">
             <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Tersedia Juga di Marketplace:</p>
             <div className="flex flex-wrap gap-2">
+              {settings.gramedia_url && (
+                <a
+                  href={settings.gramedia_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-bold text-[#005BAC] hover:bg-blue-100 transition"
+                >
+                  Gramedia ➔
+                </a>
+              )}
               {settings.shopee_url && (
                 <a
                   href={settings.shopee_url}

@@ -19,7 +19,7 @@ const defaults = {
   recommendation_kicker: "Baca, bayangkan, tumbuh.",
   recommendation_title: "Satu halaman bisa mengubah harimu.",
   about_us: "", publishing_info: "", shopping_guide: "", shipping_info: "", contact_us: "",
-  shopee_url: "", tokopedia_url: "", youtube_url: "", whatsapp_url: "", facebook_url: "", instagram_url: "",
+  gramedia_url: "", shopee_url: "", tokopedia_url: "", youtube_url: "", whatsapp_url: "", facebook_url: "", instagram_url: "",
   meta_title: "", meta_description: "", meta_keywords: "", google_site_verification: "",
 };
 
@@ -276,7 +276,7 @@ export default function SettingsPage() {
         </div>
       </Card>
 
-      <Card title="Tautan Marketplace" description="URL untuk floating button Pesan Cepat."><div className="grid gap-5 md:grid-cols-2"><TextField label="Link toko Shopee" type="url" value={form.shopee_url} onChange={(value) => change("shopee_url", value)} placeholder="https://shopee.co.id/nama-toko"/><TextField label="Link toko Tokopedia" type="url" value={form.tokopedia_url} onChange={(value) => change("tokopedia_url", value)} placeholder="https://www.tokopedia.com/nama-toko"/></div></Card>
+      <Card title="Tautan Marketplace" description="URL untuk floating button Pesan Cepat."><div className="grid gap-5 md:grid-cols-3"><TextField label="Link toko Gramedia" type="url" value={form.gramedia_url} onChange={(value) => change("gramedia_url", value)} placeholder="https://www.gramedia.com/..." help="Kosongkan jika tidak ingin ditampilkan."/><TextField label="Link toko Shopee" type="url" value={form.shopee_url} onChange={(value) => change("shopee_url", value)} placeholder="https://shopee.co.id/nama-toko"/><TextField label="Link toko Tokopedia" type="url" value={form.tokopedia_url} onChange={(value) => change("tokopedia_url", value)} placeholder="https://www.tokopedia.com/nama-toko"/></div></Card>
 
       <Card title="Media Sosial" description="Ikon media sosial yang ditampilkan pada footer."><div className="grid gap-5 md:grid-cols-2">{[["youtube_url","YouTube","https://youtube.com/@nama-channel"],["whatsapp_url","WhatsApp","https://wa.me/628xxxxxxxxxx"],["facebook_url","Facebook","https://facebook.com/nama-halaman"],["instagram_url","Instagram","https://instagram.com/nama-akun"]].map(([key, label, placeholder]) => <TextField key={key} label={`Link ${label}`} type="url" value={form[key]} onChange={(value) => change(key, value)} placeholder={placeholder}/>)}</div></Card>
 

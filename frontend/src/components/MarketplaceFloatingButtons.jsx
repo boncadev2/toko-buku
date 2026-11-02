@@ -2,6 +2,23 @@
 
 import { useEffect, useState } from "react";
 
+function GramediaLogo() {
+  return (
+    <svg viewBox="0 0 32 32" className="h-7 w-7" fill="none" aria-hidden="true">
+      <path
+        d="M24.8 11.2A9.8 9.8 0 1 0 26 16.5h-9.5v-3.2h12.5a13 13 0 1 1-2.4-7.2l-2.3 2.5a9.8 9.8 0 0 0 .5 2.6Z"
+        fill="white"
+      />
+      <path
+        d="M17.5 10.5 22.5 5.5M17.5 14.5 26.5 5.5"
+        stroke="white"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 function ShopeeLogo() {
   return (
     <svg viewBox="0 0 32 32" className="h-7 w-7" fill="none" aria-hidden="true">
@@ -34,7 +51,7 @@ function WhatsAppLogo() {
 }
 
 export default function MarketplaceFloatingButtons({ cartCount = 0, showCart = false, settings: propSettings = null }) {
-  const [settings, setSettings] = useState({ shopee_url: "", tokopedia_url: "", whatsapp_url: "" });
+  const [settings, setSettings] = useState({ gramedia_url: "", shopee_url: "", tokopedia_url: "", whatsapp_url: "" });
 
   useEffect(() => {
     try {
@@ -57,11 +74,13 @@ export default function MarketplaceFloatingButtons({ cartCount = 0, showCart = f
 
   const activeSettings = propSettings ? { ...settings, ...propSettings } : settings;
 
+  const gramediaHref = (activeSettings?.gramedia_url || "").trim();
   const shopeeHref = (activeSettings?.shopee_url || "").trim();
   const tokopediaHref = (activeSettings?.tokopedia_url || "").trim();
   const whatsappHref = (activeSettings?.whatsapp_url || "").trim();
 
   const channels = [
+    ["Gramedia", gramediaHref, "bg-[#005BAC]", <GramediaLogo key="gramedia" />],
     ["Shopee", shopeeHref, "bg-[#EE4D2D]", <ShopeeLogo key="shopee" />],
     ["Tokopedia", tokopediaHref, "bg-[#42B549]", <TokopediaLogo key="tokopedia" />],
     ["WhatsApp", whatsappHref, "bg-[#25D366]", <WhatsAppLogo key="whatsapp" />],
