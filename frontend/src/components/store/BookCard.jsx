@@ -1,2 +1,25 @@
 import BookCover from "./BookCover";
-export default function BookCard({ book }) { return <a href={`/buku/${book.slug}`} className="rounded-2xl border border-stone-200 bg-white p-3 shadow-sm"><BookCover title={book.title} /><h2 className="mt-3 truncate text-sm font-bold">{book.title}</h2><p className="mt-1 truncate text-xs text-stone-500">{book.author}</p><p className="mt-2 font-black text-blue-700">Rp{Number(book.price).toLocaleString("id-ID")}</p></a>; }
+
+export default function BookCard({ book }) {
+  const isReferral = Boolean(book.referral_url);
+  const detailHref = book.referral_url || `/buku/${book.slug}`;
+
+  return (
+    <a
+      href={detailHref}
+      target={isReferral ? "_blank" : undefined}
+      rel={isReferral ? "noopener noreferrer" : undefined}
+      className="rounded-2xl border border-stone-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-md flex flex-col justify-between"
+    >
+      <div>
+        <BookCover title={book.title} />
+        <h2 className="mt-3 truncate text-sm font-bold">{book.title}</h2>
+        <p className="mt-1 truncate text-xs text-stone-500">{book.author}</p>
+        <p className="mt-2 font-black text-blue-700">Rp{Number(book.price).toLocaleString("id-ID")}</p>
+      </div>
+      <span className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-blue-700">
+        {isReferral ? "Lihat detail ↗" : "Lihat detail →"}
+      </span>
+    </a>
+  );
+}

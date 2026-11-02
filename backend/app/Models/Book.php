@@ -18,7 +18,7 @@ class Book extends Model
         'category_id', 'sku', 'slug', 'title', 'author', 'publisher', 'publication_year', 'isbn',
         'pages', 'short_description', 'description', 'cost_price', 'price', 'discount_type',
         'discount_value', 'discount_start_at', 'discount_end_at', 'weight', 'length', 'width',
-        'height', 'stock', 'minimum_stock', 'cover_image', 'is_featured', 'is_active',
+        'height', 'stock', 'minimum_stock', 'cover_image', 'referral_url', 'is_featured', 'is_active',
     ];
 
     protected function casts(): array

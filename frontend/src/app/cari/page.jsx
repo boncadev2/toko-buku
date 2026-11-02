@@ -14,17 +14,31 @@ function DynamicBookCard({ book }) {
   if (book.discount_type === 'percentage') label = "-" + parseInt(book.discount_value) + "%";
   else if (book.discount_type === 'fixed') label = "Promo";
 
-  return <a href={`/buku/${book.slug}`} className="group rounded-2xl bg-white p-4 shadow-sm border border-stone-100 transition hover:-translate-y-1 hover:shadow-md">
-    <div className="relative aspect-[3/4] rounded-xl bg-slate-100 p-0 overflow-hidden text-white">
-      {book.cover_image_url ? <img src={book.cover_image_url} alt={book.title} className="w-full h-full object-cover" /> : <div className="p-3 w-full h-full bg-gradient-to-br from-blue-700 to-cyan-500 flex items-end"><b className="leading-tight">{book.title}</b></div>}
-      {label && <span className="absolute right-2 top-2 rounded-full bg-white/95 px-2 py-1 text-[10px] font-bold text-stone-900 shadow-sm">{label}</span>}
+  const isReferral = Boolean(book.referral_url);
+  const detailHref = book.referral_url || `/buku/${book.slug}`;
+
+  return <a
+    href={detailHref}
+    target={isReferral ? "_blank" : undefined}
+    rel={isReferral ? "noopener noreferrer" : undefined}
+    className="group rounded-2xl bg-white p-4 shadow-sm border border-stone-100 transition hover:-translate-y-1 hover:shadow-md flex flex-col justify-between"
+  >
+    <div>
+      <div className="relative aspect-[3/4] rounded-xl bg-slate-100 p-0 overflow-hidden text-white">
+        {book.cover_image_url ? <img src={book.cover_image_url} alt={book.title} className="w-full h-full object-cover" /> : <div className="p-3 w-full h-full bg-gradient-to-br from-blue-700 to-cyan-500 flex items-end"><b className="leading-tight">{book.title}</b></div>}
+        {label && <span className="absolute right-2 top-2 rounded-full bg-white/95 px-2 py-1 text-[10px] font-bold text-stone-900 shadow-sm">{label}</span>}
+        {isReferral && <span className="absolute left-2 top-2 rounded-full bg-blue-600/90 px-2 py-0.5 text-[9px] font-bold text-white shadow-sm">Referral</span>}
+      </div>
+      <b className="mt-3 block truncate group-hover:text-blue-700" title={book.title}>{book.title}</b>
+      <small className="text-slate-500 block truncate">{book.category?.name || "Buku"}</small>
+      <div className="mt-1 flex flex-wrap items-baseline gap-x-2">
+        <span className="font-bold text-blue-700">{formatter.format(book.price)}</span>
+        {book.original_price && <span className="text-xs text-stone-400 line-through">{formatter.format(book.original_price)}</span>}
+      </div>
     </div>
-    <b className="mt-3 block truncate" title={book.title}>{book.title}</b>
-    <small className="text-slate-500 block truncate">{book.category?.name || "Buku"}</small>
-    <div className="mt-1 flex flex-wrap items-baseline gap-x-2">
-      <span className="font-bold text-blue-700">{formatter.format(book.price)}</span>
-      {book.original_price && <span className="text-xs text-stone-400 line-through">{formatter.format(book.original_price)}</span>}
-    </div>
+    <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-blue-700 group-hover:text-blue-900">
+      {isReferral ? "Lihat detail ↗" : "Lihat detail →"}
+    </span>
   </a>;
 }
 
