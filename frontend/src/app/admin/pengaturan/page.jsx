@@ -248,7 +248,7 @@ export default function SettingsPage() {
             label="Judul SEO Website (Meta Title)"
             value={form.meta_title}
             onChange={(value) => change("meta_title", value)}
-            placeholder="Toko Buku Online Terlengkap & Original"
+            placeholder="Vidara Books - Penerbit Buku"
             help="Judul yang muncul di tab peramban dan hasil pencarian Google. Jika kosong, akan menggunakan nama aplikasi."
           />
           <TextField

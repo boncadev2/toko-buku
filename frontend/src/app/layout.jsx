@@ -8,7 +8,8 @@ export async function generateMetadata() {
     process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"
   ).replace(/\/$/, "");
 
-  let appName = "Penerbit buku;
+  let appName = "Vidara Books";
+  let metaTitle = "";
   let appDescription =
     "Penerbit dan Toko buku online terlengkap dan terpercaya. Temukan beragam koleksi buku pilihan, best seller, dan promo menarik.";
   let googleVerification = "";
@@ -28,7 +29,7 @@ export async function generateMetadata() {
       const payload = await res.json();
       const data = payload?.data || {};
       if (data.app_name) appName = data.app_name;
-      if (data.meta_title) appName = data.meta_title;
+      if (data.meta_title) metaTitle = data.meta_title;
       if (data.meta_description) appDescription = data.meta_description;
       else if (data.hero_description) appDescription = data.hero_description;
       if (data.google_site_verification)
@@ -58,10 +59,12 @@ export async function generateMetadata() {
         "diskon buku",
       ];
 
+  const siteTitle = metaTitle || `${appName} - Penerbit Buku`;
+
   const metadata = {
     metadataBase: new URL(siteUrl),
     title: {
-      default: `${appName} - Penerbit buku`,
+      default: siteTitle,
       template: `%s | ${appName}`,
     },
     description: appDescription,
@@ -84,7 +87,7 @@ export async function generateMetadata() {
       },
     },
     openGraph: {
-      title: `${appName} - Penerbit Buku`,
+      title: siteTitle,
       description: appDescription,
       url: siteUrl,
       siteName: appName,
@@ -101,7 +104,7 @@ export async function generateMetadata() {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${appName} - Toko Buku Online`,
+      title: siteTitle,
       description: appDescription,
       images: [appLogo],
     },
@@ -131,7 +134,7 @@ export default function RootLayout({ children }) {
         "@type": "WebSite",
         "@id": `${siteUrl}/#website`,
         url: `${siteUrl}/`,
-        name: "Toko Buku Online",
+        name: "Vidara Books",
         potentialAction: {
           "@type": "SearchAction",
           target: {
@@ -145,7 +148,7 @@ export default function RootLayout({ children }) {
         "@type": "BookStore",
         "@id": `${siteUrl}/#store`,
         url: `${siteUrl}/`,
-        name: "Toko Buku Online",
+        name: "Vidara Books",
         priceRange: "Rp",
       },
     ],
