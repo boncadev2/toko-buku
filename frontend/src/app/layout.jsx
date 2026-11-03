@@ -8,9 +8,9 @@ export async function generateMetadata() {
     process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"
   ).replace(/\/$/, "");
 
-  let appName = "Toko Buku Online";
+  let appName = "Penerbit buku;
   let appDescription =
-    "Toko buku online terlengkap dan terpercaya. Temukan beragam koleksi buku pilihan, best seller, dan promo menarik.";
+    "Penerbit dan Toko buku online terlengkap dan terpercaya. Temukan beragam koleksi buku pilihan, best seller, dan promo menarik.";
   let googleVerification = "";
   let appLogo = `${siteUrl}/hero.jpg`;
   let customKeywords = "";
@@ -61,7 +61,7 @@ export async function generateMetadata() {
   const metadata = {
     metadataBase: new URL(siteUrl),
     title: {
-      default: `${appName} - Toko Buku Online Terlengkap & Original`,
+      default: `${appName} - Penerbit buku`,
       template: `%s | ${appName}`,
     },
     description: appDescription,
@@ -84,7 +84,7 @@ export async function generateMetadata() {
       },
     },
     openGraph: {
-      title: `${appName} - Toko Buku Online Terlengkap & Original`,
+      title: `${appName} - Penerbit Buku`,
       description: appDescription,
       url: siteUrl,
       siteName: appName,
