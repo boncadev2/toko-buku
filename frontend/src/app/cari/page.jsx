@@ -15,12 +15,10 @@ function DynamicBookCard({ book }) {
   else if (book.discount_type === 'fixed') label = "Promo";
 
   const isReferral = Boolean(book.referral_url);
-  const detailHref = book.referral_url || `/buku/${book.slug}`;
+  const detailHref = `/buku/${book.slug}`;
 
   return <a
     href={detailHref}
-    target={isReferral ? "_blank" : undefined}
-    rel={isReferral ? "noopener noreferrer" : undefined}
     className="group rounded-2xl bg-white p-4 shadow-sm border border-stone-100 transition hover:-translate-y-1 hover:shadow-md flex flex-col justify-between"
   >
     <div>
@@ -37,7 +35,7 @@ function DynamicBookCard({ book }) {
       </div>
     </div>
     <span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-blue-700 group-hover:text-blue-900">
-      {isReferral ? "Lihat detail ↗" : "Lihat detail →"}
+      Lihat detail →
     </span>
   </a>;
 }

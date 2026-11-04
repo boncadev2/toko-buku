@@ -67,7 +67,7 @@ function DynamicBookCard({ book, label, coverClass, appName = "" }) {
   const slug = book.slug;
   const coverUrl = book.cover_image_url;
   const isReferral = Boolean(book.referral_url);
-  const detailHref = book.referral_url || `/buku/${slug}`;
+  const detailHref = `/buku/${slug}`;
   
   // Calculate discount label if not provided
   if (!label && book.discount_type === 'percentage') {
@@ -77,46 +77,32 @@ function DynamicBookCard({ book, label, coverClass, appName = "" }) {
   }
 
   return <article className="group min-w-0 rounded-2xl border border-stone-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-    <a
+    <Link
       href={detailHref}
-      target={isReferral ? "_blank" : undefined}
-      rel={isReferral ? "noopener noreferrer" : undefined}
       className={`relative flex aspect-[3/4] items-end overflow-hidden rounded-xl ${!coverUrl ? 'bg-gradient-to-br ' + (coverClass || 'from-rose-500 to-orange-300') : 'bg-slate-100'} p-0 text-white shadow-inner block`}
     >
       {coverUrl ? <img src={coverUrl} alt={title} className="w-full h-full object-cover" /> : <div className="p-4 w-full h-full flex flex-col justify-end"><div className="w-full border-l border-white/50 pl-3"><p className="text-[10px] font-medium uppercase tracking-[.18em] text-white/70">Koleksi {appName}</p><h3 className="mt-2 text-lg font-black leading-tight">{title}</h3></div></div>}
       {label && <span className="absolute right-2 top-2 rounded-full bg-white/95 px-2 py-1 text-[10px] font-bold text-stone-900 shadow-sm">{label}</span>}
-    </a>
+      {isReferral && <span className="absolute left-2 top-2 rounded-full bg-blue-600/90 px-2 py-0.5 text-[9px] font-bold text-white shadow-sm">Referral</span>}
+    </Link>
     <div className="px-1 pb-1 pt-4">
-      <a
+      <Link
         href={detailHref}
-        target={isReferral ? "_blank" : undefined}
-        rel={isReferral ? "noopener noreferrer" : undefined}
         className="block"
       >
         <h3 className="truncate font-bold hover:text-blue-700" title={title}>{title}</h3>
-      </a>
+      </Link>
       <p className="mt-1 truncate text-sm text-stone-500">{author}</p>
       <div className="mt-3 flex flex-wrap items-baseline gap-x-2">
         <span className="font-bold text-orange-700">{price}</span>
         {originalPrice && <span className="text-xs text-stone-400 line-through">{originalPrice}</span>}
       </div>
-      {isReferral ? (
-        <a
-          href={detailHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-3 inline-flex text-xs font-bold text-blue-700 hover:text-blue-900"
-        >
-          Lihat detail ↗
-        </a>
-      ) : (
-        <Link
-          href={detailHref}
-          className="mt-3 inline-flex text-xs font-bold text-blue-700 hover:text-blue-900"
-        >
-          Lihat detail →
-        </Link>
-      )}
+      <Link
+        href={detailHref}
+        className="mt-3 inline-flex text-xs font-bold text-blue-700 hover:text-blue-900"
+      >
+        Lihat detail →
+      </Link>
     </div>
   </article>;
 }

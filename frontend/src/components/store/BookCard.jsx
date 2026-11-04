@@ -1,14 +1,12 @@
+import Link from "next/link";
 import BookCover from "./BookCover";
 
 export default function BookCard({ book }) {
-  const isReferral = Boolean(book.referral_url);
-  const detailHref = book.referral_url || `/buku/${book.slug}`;
+  const detailHref = `/buku/${book.slug}`;
 
   return (
-    <a
+    <Link
       href={detailHref}
-      target={isReferral ? "_blank" : undefined}
-      rel={isReferral ? "noopener noreferrer" : undefined}
       className="rounded-2xl border border-stone-200 bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-md flex flex-col justify-between"
     >
       <div>
@@ -18,8 +16,8 @@ export default function BookCard({ book }) {
         <p className="mt-2 font-black text-blue-700">Rp{Number(book.price).toLocaleString("id-ID")}</p>
       </div>
       <span className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-blue-700">
-        {isReferral ? "Lihat detail ↗" : "Lihat detail →"}
+        Lihat detail →
       </span>
-    </a>
+    </Link>
   );
 }
