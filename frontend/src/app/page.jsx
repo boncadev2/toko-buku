@@ -72,7 +72,6 @@ function DynamicBookCard({ book, label, coverClass, appName = "" }) {
     >
       {coverUrl ? <img src={coverUrl} alt={title} className="w-full h-full object-cover" /> : <div className="p-4 w-full h-full flex flex-col justify-end"><div className="w-full border-l border-white/50 pl-3"><p className="text-[10px] font-medium uppercase tracking-[.18em] text-white/70">Koleksi {appName}</p><h3 className="mt-2 text-lg font-black leading-tight">{title}</h3></div></div>}
       {label && <span className="absolute right-2 top-2 rounded-full bg-white/95 px-2 py-1 text-[10px] font-bold text-stone-900 shadow-sm">{label}</span>}
-      {isReferral && <span className="absolute left-2 top-2 rounded-full bg-blue-600/90 px-2 py-0.5 text-[9px] font-bold text-white shadow-sm">Referral</span>}
     </a>
     <div className="px-1 pb-1 pt-4">
       <a
