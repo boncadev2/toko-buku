@@ -30,6 +30,19 @@ const shelves = [
   ] },
 ];
 
+const vidaraShelf = {
+  id: "terbitan-vidara",
+  eyebrow: "Penerbitan Resmi",
+  title: "Terbitan Vidara",
+  description: "Koleksi buku pilihan dan karya penulis yang diterbitkan secara resmi oleh Vidara Books.",
+  books: [
+    ["Jendela Masa Depan", "Vidara Editorial", "Rp95.000", "from-orange-500 to-amber-700", "Terbitan"],
+    ["Dari Gagasan Menjadi Karya", "Tim Redaksi Vidara", "Rp88.000", "from-stone-800 to-amber-900", "Terbitan"],
+    ["Menembus Cakrawala", "R. A. Pramesti", "Rp105.000", "from-teal-800 to-emerald-600", "Terbitan"],
+    ["Ruang dan Waktu", "Hendra Wijaya", "Rp92.000", "from-blue-900 to-indigo-700", "Terbitan"],
+  ],
+};
+
 function BookCard({ book, appName = "" }) {
   const [title, author, price, cover, label, originalPrice] = book;
   const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -115,6 +128,7 @@ function Shelf({ shelf, dynamicBooks, appName = "" }) {
   if (shelf.id === "terbaru") link = "/cari?sort=newest";
   else if (shelf.id === "terlaris") link = "/cari?sort=bestseller";
   else if (shelf.id === "promo") link = "/cari?sort=promo";
+  else if (shelf.id === "terbitan-vidara") link = "/cari?q=Vidara";
 
   return <section id={shelf.id} className="scroll-mt-24 py-10 sm:py-14"><div className="mb-7 flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-orange-700">{shelf.eyebrow}</p><h2 className="mt-2 text-2xl font-black tracking-tight text-stone-950 sm:text-3xl">{shelf.title}</h2><p className="mt-2 text-sm text-stone-600">{shelf.description}</p></div><Link href={link} className="text-sm font-bold text-orange-700">Lihat semua →</Link></div><div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-5">{booksToRender === dynamicBooks ? booksToRender.map(book => <DynamicBookCard book={book} key={book.id} appName={appName} />) : booksToRender.map(book => <BookCard book={book} key={book[0]} appName={appName} />)}</div></section>;
 }
@@ -259,6 +273,7 @@ export default function Home() {
   const [promoBooks, setPromoBooks] = useState(null);
   const [latestBooks, setLatestBooks] = useState(null);
   const [bestsellerBooks, setBestsellerBooks] = useState(null);
+  const [vidaraBooks, setVidaraBooks] = useState(null);
   const [user, setUser] = useState(null);
   const [cartCount, setCartCount] = useState(0);
   const [logoutOpen, setLogoutOpen] = useState(false);
@@ -299,6 +314,20 @@ export default function Home() {
     fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=promo&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => setPromoBooks(payload?.data || [])).catch(() => setPromoBooks([]));
     fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=newest&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setLatestBooks(payload.data)).catch(() => null);
     fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?sort=bestseller&per_page=4`).then((r) => r.ok ? r.json() : null).then((payload) => payload?.data && setBestsellerBooks(payload.data)).catch(() => null);
+    fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?publisher=Vidara&per_page=4`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((payload) => {
+        if (payload?.data && payload.data.length > 0) {
+          setVidaraBooks(payload.data);
+        } else {
+          return fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080/api"}/books?search=Vidara&per_page=4`)
+            .then((r2) => (r2.ok ? r2.json() : null))
+            .then((p2) => {
+              if (p2?.data && p2.data.length > 0) setVidaraBooks(p2.data);
+            });
+        }
+      })
+      .catch(() => setVidaraBooks([]));
   }, []);
 
   useEffect(() => {
@@ -430,7 +459,31 @@ export default function Home() {
       </div>
     </section>
     
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"><section id="kategori" className="scroll-mt-24 py-12 sm:py-16"><div className="mb-7"><p className="text-xs font-bold uppercase tracking-[.2em] text-orange-700">Telusuri minatmu</p><h2 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Kategori pilihan</h2></div><CategorySlider categories={dbCategories} categoryColors={categoryColors} /></section>{shelves.map((shelf) => <Shelf shelf={shelf} key={shelf.id} appName={appName} dynamicBooks={shelf.id === "terbaru" ? latestBooks : shelf.id === "terlaris" ? bestsellerBooks : null} />)}</div>
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* Section: Terbitan Vidara (Di bawah Hero, sama dengan Segar dari rak) */}
+      <Shelf
+        shelf={vidaraShelf}
+        dynamicBooks={vidaraBooks}
+        appName={appName}
+      />
+
+      <section id="kategori" className="scroll-mt-24 py-12 sm:py-16">
+        <div className="mb-7">
+          <p className="text-xs font-bold uppercase tracking-[.2em] text-orange-700">Telusuri minatmu</p>
+          <h2 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">Kategori pilihan</h2>
+        </div>
+        <CategorySlider categories={dbCategories} categoryColors={categoryColors} />
+      </section>
+
+      {shelves.map((shelf) => (
+        <Shelf
+          shelf={shelf}
+          key={shelf.id}
+          appName={appName}
+          dynamicBooks={shelf.id === "terbaru" ? latestBooks : shelf.id === "terlaris" ? bestsellerBooks : null}
+        />
+      ))}
+    </div>
     
     {promoBooks && promoBooks.length > 0 && (
       <section id="promo" className="scroll-mt-24 bg-stone-950 py-12 text-white sm:py-16">
@@ -455,7 +508,7 @@ export default function Home() {
     )}
     
     <section className="border-b border-stone-200 bg-orange-100"><div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-5 px-4 py-10 sm:px-6 md:flex-row md:items-center lg:px-8"><div><p className="text-xl font-black text-stone-950">Jangan sampai kehabisan cerita bagus.</p><p className="mt-1 text-sm text-stone-600">Dapatkan kabar koleksi dan promo pilihan setiap minggu.</p></div><form className="flex w-full max-w-md gap-2" onSubmit={(event) => event.preventDefault()}><input className="min-w-0 flex-1 rounded-xl border border-orange-200 bg-white px-4 py-3 text-sm outline-none" type="email" placeholder="Email kamu" aria-label="Email kamu" /><button className="rounded-xl bg-stone-950 px-4 py-3 text-sm font-bold text-white">Berlangganan</button></form></div></section>
-    <footer><div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-[1.5fr_1fr_1fr] lg:px-8"><div><div className="flex items-center font-black text-stone-950">{appLogo ? <img src={appLogo} alt="" className="h-10 sm:h-11 w-auto max-w-[180px] rounded-lg object-contain" /> : <span className="grid h-10 w-10 place-items-center rounded-lg bg-orange-700 text-sm text-white">{(appName || " ")[0].toUpperCase()}</span>}</div><p className="mt-4 max-w-sm whitespace-pre-line text-sm leading-6 text-stone-600">{marketplace.store_address || "Alamat toko belum diatur."}</p><SocialLinks settings={marketplace}/></div><div><h2 className="font-bold">Jelajahi</h2><div className="mt-4 grid gap-3 text-sm text-stone-600"><a href="#kategori">Kategori</a><a href="#terbaru">Buku baru</a><a href="#terlaris">Terlaris</a><Link href="/cari?sort=promo">Promo</Link></div></div><div><h2 className="font-bold">Bantuan</h2><div className="mt-4 grid gap-3 text-sm text-stone-600"><button type="button" onClick={() => setInfoModal({ open: true, tab: "tentang" })} className="text-left hover:text-stone-950 transition cursor-pointer">Tentang kami</button><Link href="/penerbitan" className="text-left hover:text-stone-950 transition cursor-pointer">Layanan penerbitan</Link><button type="button" onClick={() => setInfoModal({ open: true, tab: "cara-belanja" })} className="text-left hover:text-stone-950 transition cursor-pointer">Cara belanja</button><button type="button" onClick={() => setInfoModal({ open: true, tab: "pengiriman" })} className="text-left hover:text-stone-950 transition cursor-pointer">Pengiriman</button><button type="button" onClick={() => setInfoModal({ open: true, tab: "kontak" })} className="text-left hover:text-stone-950 transition cursor-pointer">Hubungi kami</button></div></div></div><div className="border-t border-stone-200"><p className="mx-auto max-w-7xl px-4 py-5 text-xs text-stone-500 sm:px-6 lg:px-8">© 2026. Dibuat untuk pembaca yang selalu ingin tahu.</p></div></footer>
+    <footer><div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-[1.5fr_1fr_1fr] lg:px-8"><div><div className="flex items-center font-black text-stone-950">{appLogo ? <img src={appLogo} alt="" className="h-10 sm:h-11 w-auto max-w-[180px] rounded-lg object-contain" /> : <span className="grid h-10 w-10 place-items-center rounded-lg bg-orange-700 text-sm text-white">{(appName || " ")[0].toUpperCase()}</span>}</div><p className="mt-4 max-w-sm whitespace-pre-line text-sm leading-6 text-stone-600">{marketplace.store_address || "Alamat toko belum diatur."}</p><SocialLinks settings={marketplace}/></div><div><h2 className="font-bold">Jelajahi</h2><div className="mt-4 grid gap-3 text-sm text-stone-600"><a href="#terbitan-vidara">Terbitan Vidara</a><a href="#kategori">Kategori</a><a href="#terbaru">Buku baru</a><a href="#terlaris">Terlaris</a><Link href="/cari?sort=promo">Promo</Link></div></div><div><h2 className="font-bold">Bantuan</h2><div className="mt-4 grid gap-3 text-sm text-stone-600"><button type="button" onClick={() => setInfoModal({ open: true, tab: "tentang" })} className="text-left hover:text-stone-950 transition cursor-pointer">Tentang kami</button><Link href="/penerbitan" className="text-left hover:text-stone-950 transition cursor-pointer">Layanan penerbitan</Link><button type="button" onClick={() => setInfoModal({ open: true, tab: "cara-belanja" })} className="text-left hover:text-stone-950 transition cursor-pointer">Cara belanja</button><button type="button" onClick={() => setInfoModal({ open: true, tab: "pengiriman" })} className="text-left hover:text-stone-950 transition cursor-pointer">Pengiriman</button><button type="button" onClick={() => setInfoModal({ open: true, tab: "kontak" })} className="text-left hover:text-stone-950 transition cursor-pointer">Hubungi kami</button></div></div></div><div className="border-t border-stone-200"><p className="mx-auto max-w-7xl px-4 py-5 text-xs text-stone-500 sm:px-6 lg:px-8">© 2026. Dibuat untuk pembaca yang selalu ingin tahu.</p></div></footer>
     <LogoutConfirmModal open={logoutOpen} onCancel={() => setLogoutOpen(false)} onConfirm={confirmLogout}/>
     <InfoModal open={infoModal.open} tab={infoModal.tab} onClose={() => setInfoModal(prev => ({ ...prev, open: false }))} onTabChange={(tab) => setInfoModal({ open: true, tab })} settings={marketplace} />
   </main>;
