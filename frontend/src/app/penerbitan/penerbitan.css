@@ -420,7 +420,17 @@
 }
 
 .penerbitan-page .package li {
-  padding: 6px 0;
+  position: relative;
+  padding: 6px 0 6px 20px;
+}
+
+.penerbitan-page .package li:before {
+  content: '✓';
+  /* color: var(--gold); */
+  /* font-weight: 700; */
+  position: absolute;
+  left: 0;
+  top: 6px;
 }
 
 .penerbitan-page .pick {

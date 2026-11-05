@@ -18,11 +18,12 @@ const PACKAGES = [
     desc: "Bagi penulis yang ingin mencetak karya dalam jumlah terbatas dengan proses penyuntingan dan penataan yang rapi.",
     price: "Rp725.000",
     spec: "A5 · Maks. 150 halaman · 5 eksemplar",
+    isbn: "Penyuntingan · Desain · Cetak",
     features: [
       "Penyuntingan bahasa dasar dan penataan isi",
       "Desain sampul serta berkas siap cetak",
       "Lima eksemplar buku dan materi promosi dasar",
-      "Pendampingan dan pengajuan ISBN melalui Perpusnas sesuai kelayakan buku",
+      "Pemeriksaan berkas akhir sebelum buku dicetak",
     ],
   },
   {
@@ -33,11 +34,12 @@ const PACKAGES = [
     desc: "Untuk naskah yang disiapkan sebagai buku bagi pembaca umum, dengan jumlah buku awal yang lebih banyak.",
     price: "Rp1.425.000",
     spec: "A5 · Maks. 150 halaman · 15 eksemplar",
+    isbn: "Produksi · Katalog · Cetak",
     features: [
       "Seluruh layanan produksi dasar",
       "Lima belas eksemplar buku cetak",
       "Pencantuman buku pada katalog dan kanal penjualan Vidara yang tersedia",
-      "Pendampingan dan pengajuan ISBN melalui Perpusnas sesuai kelayakan buku",
+      "Persiapan informasi buku untuk katalog penerbit",
     ],
   },
   {
@@ -48,12 +50,13 @@ const PACKAGES = [
     desc: "Untuk penulis yang memerlukan penerbitan sekaligus bantuan menyiapkan dokumen pencatatan hak cipta.",
     price: "Rp1.675.000",
     spec: "A5 · Maks. 150 halaman · 15 eksemplar",
+    isbn: "Editorial · Administrasi karya",
     features: [
       "Seluruh fasilitas Paket Terbit Bisnis",
       "Pendampingan administrasi pencatatan hak cipta",
       "Panduan kelengkapan dan kepemilikan dokumen karya",
       "Biaya resmi pencatatan dikonfirmasi sebelum pemesanan",
-      "Pendampingan dan pengajuan ISBN melalui Perpusnas sesuai kelayakan buku",
+      "Koordinasi naskah dan kelengkapan berkas produksi",
     ],
   },
   {
@@ -64,11 +67,12 @@ const PACKAGES = [
     desc: "Untuk mengolah skripsi, tesis, disertasi, atau naskah penelitian menjadi buku yang utuh dan lebih nyaman dibaca.",
     price: "Rp2.050.000",
     spec: "A5 · Maks. 200 halaman · 5 eksemplar",
+    isbn: "Adaptasi akademik · Cetak",
     features: [
       "Penelaahan struktur, sasaran pembaca, dan arah buku",
       "Adaptasi serta penyuntingan naskah akademik",
       "Desain sampul, tata isi, dan lima eksemplar",
-      "Pendampingan dan pengajuan ISBN melalui Perpusnas sesuai kelayakan buku",
+      "Pemeriksaan akhir naskah hasil adaptasi sebelum produksi",
     ],
   },
   {
@@ -79,12 +83,13 @@ const PACKAGES = [
     desc: "Untuk penulis yang ingin mengubah karya akademik menjadi buku sekaligus dibantu menyiapkan administrasi pencatatan hak cipta.",
     price: "Rp2.300.000",
     spec: "A5 · Maks. 200 halaman · 5 eksemplar",
+    isbn: "Adaptasi · Administrasi karya",
     features: [
       "Seluruh layanan Paket Terbit Konversi",
       "Pendampingan administrasi pencatatan hak cipta",
       "Lima eksemplar buku dan materi promosi dasar",
       "Biaya resmi pencatatan dikonfirmasi sebelum pemesanan",
-      "Pendampingan dan pengajuan ISBN melalui Perpusnas sesuai kelayakan buku",
+      "Pemeriksaan akhir naskah dan berkas produksi",
     ],
   },
   {
@@ -95,11 +100,12 @@ const PACKAGES = [
     desc: "Untuk buku yang memerlukan perhatian lebih pada unsur visual dan pengaturan teknis produksinya.",
     price: "Rp2.400.000",
     spec: "A5 · Maks. 150 halaman · 15 eksemplar",
+    isbn: "Editorial · Penataan visual",
     features: [
       "Penyuntingan, desain sampul, dan penataan isi",
       "Pengaturan bagian berwarna sesuai kesepakatan spesifikasi",
       "Lima belas eksemplar serta materi promosi dasar",
-      "Pendampingan dan pengajuan ISBN melalui Perpusnas sesuai kelayakan buku",
+      "Pemeriksaan pratinjau tata isi sebelum proses cetak",
     ],
   },
 ];
@@ -495,24 +501,22 @@ export default function PenerbitanClient() {
         <section aria-labelledby="isbn-title" className="isbn-feature" id="layanan-isbn">
           <div className="wrap isbn-layout">
             <div>
-              <div className="eyebrow">Layanan penerbitan Vidara Books</div>
-              <h2 id="isbn-title">Buku Anda, dengan identitas ISBN.</h2>
+              <div className="eyebrow">Pendampingan editorial Vidara Books</div>
+              <h2 id="isbn-title">Buku yang dipikirkan dengan cermat, bukan sekadar dicetak.</h2>
               <p>
-                Vidara Books telah terdaftar sebagai penerbit di Perpustakaan Nasional Republik
-                Indonesia dan dapat mengurus ISBN untuk buku yang memenuhi persyaratan. Kami membantu
-                menyiapkan data buku, kelengkapan administrasi, hingga pengajuan ISBN sebagai bagian
-                dari proses penerbitan.
+                Setiap naskah membawa cerita dan tujuan yang berbeda. Kami memulai pekerjaan dengan memahami gagasan penulis, 
+                mengenali pembacanya, lalu menata struktur, bahasa, dan wajah buku agar membentuk satu karya yang utuh. 
+                Prosesnya mencakup pendampingan editorial sampai persiapan produksi sesuai paket pilihan.
               </p>
               <p className="isbn-note">
-                Pengurusan ISBN tersedia dalam keenam paket penerbitan. ISBN diterbitkan oleh
-                Perpustakaan Nasional berdasarkan ketentuan yang berlaku; penerbitan nomor tidak
-                dijamin untuk naskah yang belum memenuhi persyaratan.
+                Ruang lingkup penyuntingan, jumlah kesempatan revisi, serta spesifikasi cetak dibicarakan sebelum pekerjaan dimulai. 
+                Penulis dapat mengetahui proses dan hasil yang akan diperoleh.
               </p>
             </div>
             <div aria-label="Pengurusan ISBN" className="isbn-stamp">
-              <strong>ISBN</strong>
-              <span>Pengurusan ISBN</span>
-              <small>Melalui Perpustakaan Nasional Republik Indonesia</small>
+              <strong>VIDARA</strong>
+              <span>EDITORIAL & PRODUKSI</span>
+              <small>Dari gagasan dan naskah menjadi buku yang siap dibaca.</small>
             </div>
           </div>
         </section>
@@ -540,7 +544,7 @@ export default function PenerbitanClient() {
                   <p className="pack-desc">{pkg.desc}</p>
                   <div className="price">{pkg.price}</div>
                   <p className="spec">{pkg.spec}</p>
-                  <div className="pack-isbn">Pengurusan ISBN termasuk paket</div>
+                  <div className="pack-isbn">{pkg.isbn}</div>
                   <ul>
                     {pkg.features.map((feat, fidx) => (
                       <li key={fidx}>{feat}</li>
@@ -581,7 +585,7 @@ export default function PenerbitanClient() {
                   paket.
                 </li>
                 <li>
-                  Pengurusan ISBN melalui Perpustakaan Nasional untuk buku yang memenuhi ketentuan.
+                  Pemeriksaan kelengkapan naskah dan berkas produksi sebelum dicetak.
                 </li>
                 <li>
                   Pembuatan poster promosi, pembatas buku, dan surat keterangan terbit dari Vidara
@@ -681,36 +685,27 @@ export default function PenerbitanClient() {
             <div className="eyebrow">Sebelum memesan</div>
             <h2>Ketentuan yang perlu diketahui.</h2>
             <ol className="tandc">
+              
               <li>
-                Harga berlaku untuk buku hitam-putih ukuran standar (A5 atau setara) dengan batasan
-                maksimal halaman sesuai paket, dihitung pada halaman buku jadi. Jika naskah lebih
-                panjang, memakai bahan/ukuran berbeda, atau membutuhkan cetak berwarna tambahan,
-                biaya disepakati terlebih dahulu.
+                Harga berlaku untuk buku ukuran A5, isi hitam putih, kecuali penggunaan warna yang secara khusus disepakati pada Paket Prioritas. Sampul, kertas, dan penyelesaian cetak mengikuti spesifikasi dalam penawaran.
               </li>
               <li>
-                Pengurusan ISBN termasuk dalam layanan keenam paket bagi buku yang memenuhi kriteria
-                Perpustakaan Nasional. Vidara Books mengajukan permohonan melalui akun penerbitnya;
-                penerbitan ISBN tetap mengikuti penilaian dan ketentuan Perpustakaan Nasional. Harga
-                paket merupakan biaya jasa penerbitan, bukan harga nomor ISBN.
+                Batas 150 atau 200 halaman mengacu pada halaman buku jadi. Jika naskah lebih panjang, memakai bahan/ukuran berbeda, atau membutuhkan cetak berwarna tambahan, biaya disepakati terlebih dahulu.
               </li>
               <li>
-                Paket Konversi mencakup adaptasi editorial dalam batas pekerjaan yang disepakati,
-                bukan penulisan penelitian baru, penyediaan data, atau penulisan buku sepenuhnya dari
-                awal.
+                Setiap paket memuat layanan editorial dan produksi sebagaimana dirinci pada kartu paket. Jenis pekerjaan, tahapan pemeriksaan, kesempatan revisi, serta hasil yang diserahkan ditegaskan dalam penawaran atau perjanjian sebelum pengerjaan.
               </li>
               <li>
-                Pendampingan pencatatan hak cipta tidak sama dengan jaminan persetujuan. Biaya resmi
-                pemerintah untuk pencatatan, jika diajukan, diberitahukan secara terpisah sebelum
-                pembayaran.
+                Paket Konversi mencakup adaptasi editorial dalam batas pekerjaan yang disepakati, bukan penulisan penelitian baru, penyediaan data, atau penulisan buku sepenuhnya dari awal.
               </li>
               <li>
-                Penempatan buku pada platform digital atau marketplace lain memerlukan proses
-                verifikasi, persetujuan platform, dan/atau kerja sama distribusi yang relevan. Tidak
-                setiap judul otomatis diterima.
+                Pendampingan pencatatan hak cipta tidak sama dengan jaminan persetujuan. Biaya resmi pemerintah untuk pencatatan, jika diajukan, diberitahukan secara terpisah sebelum pembayaran.
               </li>
               <li>
-                Biaya pengiriman, cetak tambahan, dan pekerjaan di luar paket ditentukan berdasarkan
-                permintaan dan dituangkan dalam penawaran tertulis.
+                Penempatan buku pada platform digital atau marketplace lain memerlukan proses verifikasi, persetujuan platform, dan/atau kerja sama distribusi yang relevan. Tidak setiap judul otomatis diterima.
+              </li>
+                <li>
+                Biaya pengiriman, cetak tambahan, dan pekerjaan di luar paket ditentukan berdasarkan permintaan dan dituangkan dalam penawaran tertulis.
               </li>
             </ol>
           </div>
@@ -731,12 +726,9 @@ export default function PenerbitanClient() {
                 </p>
               </details>
               <details>
-                <summary>Apakah Vidara Books dapat mengurus ISBN untuk buku saya?</summary>
+                <summary>Apakah saya harus mencetak buku dalam jumlah besar?</summary>
                 <p>
-                  Ya. Vidara Books telah terdaftar sebagai penerbit di Perpustakaan Nasional dan
-                  menyediakan pengurusan ISBN dalam setiap paket penerbitan. Kami menyiapkan berkas dan
-                  mengajukannya untuk naskah yang memenuhi persyaratan. Keputusan penerbitan ISBN
-                  berada pada Perpustakaan Nasional.
+                  Tidak. Vidara Books memiliki paket dengan jumlah cetak awal 5 atau 15 eksemplar. Apabila membutuhkan jumlah lebih besar, Anda dapat meminta penawaran berdasarkan jumlah buku, pilihan kertas, ukuran, dan spesifikasi cetak.
                 </p>
               </details>
               <details>
