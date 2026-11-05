@@ -413,11 +413,7 @@ export default function PenerbitanClient() {
                 menjadi buku.
               </h1>
               <p>
-                Anda tidak harus datang dengan naskah yang sudah sempurna. Sebuah ide, draf yang belum
-                selesai, catatan perjalanan, atau hasil penelitian bisa menjadi awal. Vidara Books
-                mendampingi penulis dari pengembangan naskah, penyuntingan, desain, pengurusan ISBN
-                melalui Perpustakaan Nasional, hingga buku siap dicetak. Agar gagasan yang berharga
-                tidak berhenti sebagai berkas yang tersimpan.
+                Anda tidak harus datang dengan naskah yang sudah sempurna. Sebuah ide, draf yang belum selesai, catatan perjalanan, atau hasil penelitian bisa menjadi awal. Vidara Books mendampingi penulis dari pengembangan naskah, penyuntingan, perancangan sampul, penataan isi, hingga buku siap diproduksi. Agar gagasan yang berharga tidak berhenti sebagai berkas yang tersimpan.
               </p>
               <div className="hero-buttons">
                 <a className="btn" href="#paket">
